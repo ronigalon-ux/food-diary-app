@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="יומן אכילה">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4F5B44">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAMY0lEQVR4nO3cu5LUWAJFURXRn4aPAxYun4WLBQ4+/1ZtZVOd9cqHHlfaa5kTMxOS2jhbV9n1MLGaT18/Pm59DQCj+/3jz8PW11DgIc/IwAMsTyDMw0O8kbEHGIcouJ4HdiGDD7AfguB9HtAbjD7A/omBl3koZ4w+wHGJgb88iMnoAxTVYyB984YfgGoI5G7a6APwmlIMZG7U8ANwqUIIHP4GDT8AtzpyCBz2xgw/AHM5Yggc7oYMPwBLOVIIHOZGDD8AazlCCHzY+gLmYPwBWNMRdmfXBXOEfwAA7NteTwN2edGGH4DR7C0EdvcJwPgDMKK97dOuAmBvDxeAlj3t1C6OK/b0QAFgmsb/JDD8CYDxB2CPRt+voQNg9IcHAG8ZeceGPJ4Y+YEBwC1G+yQw3AmA8QfgiEbbt6ECYLSHAwBzGmnnhgmAkR4KACxllL0bIgBGeRgAsIYRdm/zABjhIQDA2rbev00DYOubB4AtbbmDmwWA8QeA7fZwkwAw/gDw1xa7uHoAGH8AeG7tfVw1AIw/ALxuzZ1cLQCMPwC8b629XCUAjD8AXG6N3Vw8AIw/AFxv6f1cNACMPwDcbskdXSwAjD8A3G+pPd38TwEDAOtbJAC8/QPAfJbY1dkDwPgDwPzm3tdZA8D4A8By5txZvwEAgKDZAsDbPwAsb669nSUAjD8ArGeO3b07AIw/AKzv3v31GwAACLorALz9A8B27tlhJwAAEHRzAHj7B4Dt3brHNwWA8QeAcdyyyz4BAEDQ1QHg7R8AxnPtPjsBAICgqwLA2z8AjOuanXYCAABBFweAt38AGN+le+0EAACCLgoAb/8AsB+X7LYTAAAIejcAvP0DwP68t99OAAAgSAAAQNCbAeD4HwD2660ddwIAAEGvBoC3fwDYv9f23AkAAAQJAAAIejEAHP8DwHG8tOtOAAAgSAAAQNCzAHD8DwDHc77vTgAAIEgAAEDQ/wLA8T8AHNfTnXcCAABBAgAAggQAAAT9FwC+/wPA8Z323gkAAAQJAAAIEgAAECQAACDoYZr8ABAAapwAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQ9MHfAACAHicAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAICgf7a+ACj59f3ns//s87cvrmPj64Cih09fPz5ufRFwdC8N3bk1hs91ACc+AcDCLhm7a/57rgOYgwCABV07YkuNnusAzgkAAAgSALCQW99e537rdR3ASwQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAIEgAAECQAACBIAABAkAAAgCABAABBAgAAggQAAAQJAAAI+mfrCwCe+/X959aXME3TONcBzM8JAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAFvL525etL+EQPEdYhgAAgCABAAvy9nofzw+WIwBgYUbsNp4bLEsAwAqM2XU8L1ieAICVGLXLeE6wjodPXz8+bn0RUPPr+8+tL2E4hh/WJQDgYJaMCyMNx+ETAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIADubzty+7+v8FtiEAACBIAMABzf227u0fjkcAwEHNNdrGH45JAABA0MOnrx8ft74IYFm/vv+8+n/jzR+OzQkABFw75sYfju9hmqbJKQB0vHUaYPihQwAAQJBPAAAQJAAAIEgAAECQAACAIAEAAEECAACCPkzTNP3+8edh6wsBANbx+8efBycAABAkAAAgSAAAQJAAAICg/wLADwEB4PhOe+8EAACCBAAABAkAAAj6XwD4HQAAHNfTnXcCAABBAgAAgp4FgM8AAHA85/vuBAAAggQAAAS9GAA+AwDAcby0604AACBIAABA0KsB4DMAAOzfa3vuBAAAgt4MAKcAALBfb+24EwAACBIAABD0bgD4DAAA+/PefjsBAICgiwLAKQAA7Mclu+0EAACCLg4ApwAAML5L99oJAAAEXRUATgEAYFzX7LQTAAAIujoAnAIAwHiu3WcnAAAQdFMAOAUAgHHcsss3nwCIAADY3q177BMAAATdFQBOAQBgO/fssBMAAAi6OwCcAgDA+u7d31lOAEQAAKxnjt2d7ROACACA5c21t34DAABBswaAUwAAWM6cOzv7CYAIAID5zb2vi3wCEAEAMJ8ldtVvAAAgaLEAcAoAAPdbak8XPQEQAQBwuyV3dPFPACIAAK639H6u8hsAEQAAl1tjN1f7EaAIAID3rbWXq/5bACIAAF635k6u/q8BigAAeG7tfdzk7wCIAAD4a4td3OwPAYkAANhuDzf9S4AiAICyLXdw8z8FLAIAKNp6/zYPgGna/iEAwJpG2L0hAmCaxngYALC0UfZumACYpnEeCgAsYaSdGyoApmmshwMAcxlt34a6mHOfvn583PoaAOAeow3/yXAnAE+N+tAA4BIj79jQATBNYz88AHjN6Ps19MWd80kAgNGNPvwnw58APLWXhwpA0552alcBME37ergAdOxtn3Z1sed8EgBga3sb/pNdXvQ5IQDA2vY6/Ce7+wTwkr3/QwBgX46wO7u/gXNOAwBYyhGG/+QwN3JOCAAwlyMN/8nhbuicEADgVkcc/pPD3tg5IQDApY48/CeHv8FzQgCA1xSG/yRzoy8RAwCURv+p5E2fEwIAPdXhP0nf/EvEAMBx1Uf/KQ/iDWIAYP+M/ss8lAuJAYD9MPrv84BuJAgAxmHwr+eBzUgUACzP2M/jXwKBN26DH7/kAAAAAElFTkSuQmCC">
+<title>יומן אכילה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EF;
+    --paper-2:#F3EDDD;
+    --ink:#2B2620;
+    --ink-soft:#6B6255;
+    --sage:#748266;
+    --sage-deep:#4F5B44;
+    --clay:#C17A54;
+    --line:#E3D9C2;
+    --card-shadow: 0 1px 0 rgba(43,38,32,0.05), 0 8px 20px -12px rgba(43,38,32,0.25);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Rubik',sans-serif; -webkit-font-smoothing:antialiased;
+    min-height:100vh; padding-bottom:90px;
+  }
+  h1,h2,h3,.serif{font-family:'Frank Ruhl Libre',serif;}
+  header{
+    padding:22px 20px 16px; position:sticky; top:0; z-index:20;
+    background:var(--paper); border-bottom:1px solid var(--line);
+  }
+  header h1{font-size:22px; margin:0 0 2px; font-weight:700;}
+  header .sub{font-size:13px; color:var(--ink-soft);}
+  .tabs{
+    display:flex; gap:6px; padding:14px 20px 0; position:sticky; top:78px; z-index:19; background:var(--paper);
+  }
+  .tab{
+    flex:1; text-align:center; padding:9px 4px; border-radius:10px 10px 0 0;
+    font-size:13px; font-weight:500; color:var(--ink-soft); cursor:pointer;
+    border-bottom:2px solid transparent;
+  }
+  .tab.active{color:var(--sage-deep); border-bottom:2px solid var(--sage-deep); font-weight:600;}
+  main{padding:16px 20px 20px; max-width:520px; margin:0 auto;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* today view */
+  .day-summary{
+    background:var(--sage-deep); color:var(--paper); border-radius:16px;
+    padding:18px 20px; display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px; box-shadow:var(--card-shadow);
+  }
+  .day-summary .big{font-family:'Frank Ruhl Libre',serif; font-size:30px; font-weight:700; line-height:1;}
+  .day-summary .lbl{font-size:12px; opacity:.85; margin-top:2px;}
+  .day-summary .stat{text-align:center;}
+
+  .entry-card{
+    background:var(--paper-2); border-radius:14px; padding:12px; margin-bottom:12px;
+    display:flex; gap:12px; box-shadow:var(--card-shadow); border:1px solid var(--line);
+  }
+  .entry-card img{width:64px; height:64px; object-fit:cover; border-radius:10px; flex-shrink:0; background:#ddd;}
+  .entry-body{flex:1; min-width:0;}
+  .entry-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
+  .slot-badge{
+    font-size:11px; background:var(--sage); color:#fff; padding:2px 8px; border-radius:20px; font-weight:500;
+  }
+  .entry-time{font-size:11px; color:var(--ink-soft);}
+  .entry-desc{font-size:13.5px; margin:5px 0 6px; line-height:1.4;}
+  .entry-nums{display:flex; gap:14px; font-size:12.5px; color:var(--ink-soft);}
+  .entry-nums b{color:var(--clay); font-weight:600;}
+  .entry-del{background:none;border:none;color:var(--ink-soft);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;margin-top:4px;}
+  .preset-del{background:none;border:none;color:var(--ink-soft);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;margin-top:4px;}
+  .inj-del{background:none; border:none; font-size:14px; cursor:pointer; color:var(--ink-soft); padding:0 4px;}
+
+  .empty-note{text-align:center; color:var(--ink-soft); font-size:13px; padding:40px 20px;}
+
+  /* history */
+  .hist-row{
+    display:flex; justify-content:space-between; align-items:center; padding:13px 4px;
+    border-bottom:1px solid var(--line); cursor:pointer;
+  }
+  .hist-row .date{font-weight:600; font-size:14px;}
+  .hist-row .cal{color:var(--clay); font-weight:600; font-size:14px;}
+
+  /* add flow */
+  .add-fab{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--clay); color:#fff; border:none; border-radius:30px;
+    padding:14px 26px; font-size:15px; font-weight:600; box-shadow:0 10px 24px -8px rgba(193,122,84,.6);
+    display:flex; align-items:center; gap:8px; z-index:30; cursor:pointer;
+  }
+  .modal-bg{
+    position:fixed; inset:0; background:rgba(43,38,32,.5); z-index:50; display:none;
+    align-items:flex-end; justify-content:center;
+  }
+  .modal-bg.active{display:flex;}
+  .modal{
+    background:var(--paper); width:100%; max-width:520px; border-radius:20px 20px 0 0;
+    padding:20px 20px 26px; max-height:88vh; overflow-y:auto; position:relative;
+  }
+  .modal h2{margin:0 0 14px; font-size:19px;}
+  .field-lbl{font-size:12px; color:var(--ink-soft); margin:14px 0 5px; font-weight:500;}
+  textarea, input[type=text]{
+    width:100%; border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+    font-family:'Rubik',sans-serif; font-size:14px; background:#fff; resize:vertical; color:var(--ink);
+  }
+  .dt-row{display:flex; gap:10px;}
+  .dt-row input{flex:1; border:1px solid var(--line); border-radius:10px; padding:9px 10px; font-family:'Rubik',sans-serif; font-size:14px; background:#fff; color:var(--ink);}
+  .photo-input-row{display:flex; gap:10px;}
+  .photo-btn{
+    flex:1; border:1.5px dashed var(--sage); border-radius:12px; padding:22px 10px;
+    text-align:center; color:var(--sage-deep); font-size:13px; cursor:pointer; background:#fff;
+  }
+  .preview-wrap{position:relative; margin-top:10px;}
+  .preview-wrap img{width:100%; max-height:220px; object-fit:cover; border-radius:12px;}
+  .slot-pick{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;}
+  .slot-chip{
+    padding:6px 12px; border-radius:20px; font-size:12.5px; border:1px solid var(--line);
+    background:#fff; cursor:pointer; color:var(--ink-soft);
+  }
+  .slot-chip.sel{background:var(--sage-deep); color:#fff; border-color:var(--sage-deep);}
+  .did-chip{
+    padding:6px 12px; border-radius:20px; font-size:12.5px; border:1px solid var(--line);
+    background:#fff; cursor:pointer; color:var(--ink-soft);
+  }
+  .did-chip.sel{background:var(--sage-deep); color:#fff; border-color:var(--sage-deep);}
+  .mic-btn{
+    display:flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--line);
+    border-radius:10px; padding:8px 14px; font-size:13px; cursor:pointer; color:var(--ink); margin-top:8px;
+  }
+  .mic-btn.rec{background:#F6E4DD; border-color:var(--clay); color:var(--clay);}
+  .nums-box{
+    display:flex; gap:10px; margin-top:14px;
+  }
+  .num-card{
+    flex:1; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center;
+  }
+  .num-card .v{font-family:'Frank Ruhl Libre',serif; font-size:22px; font-weight:700; color:var(--sage-deep);}
+  .num-card .l{font-size:11px; color:var(--ink-soft);}
+  .primary-btn{
+    width:100%; background:var(--sage-deep); color:#fff; border:none; border-radius:12px;
+    padding:13px; font-size:15px; font-weight:600; margin-top:16px; cursor:pointer;
+  }
+  .primary-btn:disabled{opacity:.5;}
+  .secondary-btn{
+    width:100%; background:none; color:var(--ink-soft); border:none; padding:10px;
+    font-size:13px; cursor:pointer; text-decoration:underline;
+  }
+  .close-x{position:absolute; left:10px; top:10px; background:none; border:none; font-size:24px; color:var(--ink-soft); cursor:pointer; padding:8px 14px; line-height:1; z-index:5;}
+  .status-line{font-size:12.5px; color:var(--sage-deep); margin-top:8px; min-height:16px;}
+  .share-box{background:var(--paper-2); border-radius:14px; padding:16px; font-size:13.5px; line-height:1.6; border:1px solid var(--line);}
+  .share-box b{color:var(--sage-deep);}
+  .breakdown-row{display:flex; align-items:center; gap:6px; font-size:12.5px; padding:4px 0; border-bottom:1px solid var(--line); color:var(--ink-soft);}
+  .param-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;}
+  .param-chip{background:#fff; border:1px solid var(--line); border-radius:8px; padding:4px 9px; font-size:12px; color:var(--ink); white-space:nowrap;}
+  .param-chip b{color:var(--clay); font-weight:600;}
+  .inj-table{border-collapse:collapse; font-size:12px; white-space:nowrap; background:var(--paper-2); border-radius:10px; overflow:hidden;}
+  .inj-table th, .inj-table td{padding:8px 10px; text-align:center; border-bottom:1px solid var(--line);}
+  .inj-table th{background:var(--sage-deep); color:var(--paper); font-weight:500;}
+  .inj-table tbody tr:hover{background:#F0E9D8;}
+  .bd-item{flex:2; border:none!important; background:transparent!important; padding:2px!important; font-size:12.5px; color:var(--ink);}
+  .bd-cal, .bd-prot{width:52px; border:none!important; background:transparent!important; padding:2px!important; text-align:center; font-size:12.5px; color:var(--clay); font-weight:600;}
+  .bd-unit{font-size:11px; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>יומן אכילה</h1>
+  <div class="sub" id="todayLabel"></div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-tab="today">היום</div>
+  <div class="tab" data-tab="history">היסטוריה</div>
+  <div class="tab" data-tab="injections">זריקות ומשקל</div>
+  <div class="tab" data-tab="presets">קבועים אישיים</div>
+  <div class="tab" data-tab="share">שיתוף</div>
+</div>
+
+<main>
+  <div class="view active" id="view-today">
+    <div class="day-summary">
+      <div class="stat"><div class="big" id="todayCal">0</div><div class="lbl">קלוריות</div></div>
+      <div class="stat"><div class="big" id="todayProt">0</div><div class="lbl">חלבון (גרם)</div></div>
+    </div>
+    <div id="todayList"></div>
+  </div>
+
+  <div class="view" id="view-history">
+    <div id="histList"></div>
+  </div>
+
+  <div class="view" id="view-injections">
+    <div class="day-summary">
+      <div class="stat"><div class="big" id="injTotalLoss">0</div><div class="lbl">ירידה כוללת (ק"ג)</div></div>
+      <div class="stat"><div class="big" id="injLatestWeight">-</div><div class="lbl">משקל אחרון</div></div>
+    </div>
+    <button class="primary-btn" id="addInjBtn" style="margin-top:0;">+ הוספת מדידה / הזרקה</button>
+    <button id="importHistBtn" style="border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink-soft); font-size:12px; padding:8px 14px; cursor:pointer; margin-top:8px; width:100%;">ייבוא/רענון היסטוריית הזרקות ומשקל מהאקסל</button>
+    <div class="status-line" id="importHistStatus"></div>
+    <div id="injList" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="view" id="view-presets">
+    <div class="empty-note" style="padding:6px 4px 14px; text-align:right;">
+      הגדירי כאן מילות מפתח קבועות. כל פעם שתכתבי מילה כזו בתיאור המנה (למשל "טונה ריו" או "קפה"), החישוב ישתמש בערכים המדויקים שהגדרת - לפני שהוא מעריך את שאר הפריטים בתיאור.
+    </div>
+    <div id="presetsList"></div>
+    <div class="field-lbl">קישור לעמוד מוצר (אופציונלי - ינסה למלא את השדות למטה מחיפוש ברשת)</div>
+    <input type="text" id="presetUrl" placeholder="https://...">
+    <button class="secondary-btn" id="fetchUrlBtn" style="border:1px solid var(--line); border-radius:10px; text-decoration:none; margin-top:8px;">חשב ערכים מהקישור</button>
+    <div class="status-line" id="presetUrlStatus"></div>
+    <div class="field-lbl">מילת מפתח (איך שאת כותבת אותה בתיאור)</div>
+    <input type="text" id="presetKeyword" placeholder="למשל: טונה ריו">
+    <div class="field-lbl">מה זה בדיוק, כולל כמות</div>
+    <input type="text" id="presetNote" placeholder="למשל: קופסת טונה Rio Mare בשמן זית, 80 גרם">
+    <div class="nums-box">
+      <div class="num-card"><input type="text" id="presetCal" placeholder="קלוריות" style="text-align:center;border:none;background:transparent;width:100%;"></div>
+      <div class="num-card"><input type="text" id="presetProt" placeholder="חלבון (ג')" style="text-align:center;border:none;background:transparent;width:100%;"></div>
+    </div>
+    <button class="primary-btn" id="addPresetBtn">הוספת קבוע</button>
+    <button class="secondary-btn" id="cancelPresetEditBtn" style="display:none;">ביטול עריכה</button>
+  </div>
+
+  <div class="view" id="view-share">
+    <div class="share-box">
+      <p><b>ייצוא כל הנתונים (למעבר לגרסה עצמאית)</b></p>
+      <button class="primary-btn" id="exportAllBtn" style="margin-top:0;">ייצוא הכל כ-JSON</button>
+      <textarea id="exportAllResult" rows="10" style="margin-top:10px; font-family:monospace; font-size:10px;" readonly placeholder="התוצאה תופיע כאן - תעתיקי ותשלחי לי את כל התוכן"></textarea>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="share-box">
+      <p><b>בדיקת אחסון (מה יש בפועל בשמירה)</b></p>
+      <button class="primary-btn" id="testStorageBtn" style="margin-top:0;">הצג נתונים גולמיים מהאחסון</button>
+      <textarea id="testStorageResult" rows="10" style="margin-top:10px; font-family:monospace; font-size:11px;" readonly placeholder="התוצאה תופיע כאן"></textarea>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="share-box">
+      <p><b>בדיקת חיבור ל-API</b></p>
+      <button class="primary-btn" id="testApiBtn" style="margin-top:0;">הרצת בדיקה</button>
+      <textarea id="testApiResult" rows="8" style="margin-top:10px; font-family:monospace; font-size:11.5px;" readonly placeholder="התוצאה הגולמית תופיע כאן"></textarea>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="share-box">
+      <p><b>איך לשתף עם הדיאטנית:</b></p>
+      <p>הנתונים כאן נשמרים באחסון המשותף (shared) של האפליקציה הזו - כל מי שמקבל את הקישור לאפליקציה יכול לראות (ותאורטית גם לערוך) את הרשומות, לא רק לצפות. אין הפרדה בין "צפייה" ל"ערוכה" במערכת הזו.</p>
+      <p>כדי לשתף: פשוט שלחי לדיאטנית את הקישור של האתר הזה (מ-Netlify). כשהיא תפתח אותו, היא תראה את אותו יומן ואת אותם סיכומים יומיים - הנתונים באמת מסתנכרנים בזמן אמת בין כל מי שנכנס לקישור.</p>
+    </div>
+  </div>
+</main>
+
+<button class="add-fab" id="addFab">+ תיעוד אכילה</button>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="close-x" id="closeModal">×</button>
+    <h2 id="modalTitle">תיעוד אכילה</h2>
+
+    <div id="step-photo">
+      <div class="field-lbl">תאריך ושעה</div>
+      <div class="dt-row">
+        <input type="date" id="entryDate">
+        <input type="time" id="entryTime">
+      </div>
+
+      <div class="field-lbl">שעת ארוחה</div>
+      <div class="slot-pick" id="slotPick"></div>
+
+      <div class="field-lbl">תמונה</div>
+      <div class="photo-input-row">
+        <label class="photo-btn">📷 צלמי תמונה
+          <input type="file" accept="image/*" capture="environment" id="photoInputCamera" style="display:none">
+        </label>
+        <label class="photo-btn">🖼️ מהגלריה
+          <input type="file" accept="image/*" id="photoInputGallery" style="display:none">
+        </label>
+      </div>
+      <div class="preview-wrap" id="previewWrap" style="display:none">
+        <img id="previewImg">
+      </div>
+      <div class="status-line" id="analyzeStatus"></div>
+      <button class="secondary-btn" id="noPhotoBtn">אין תמונה - כתיבה ידנית</button>
+    </div>
+
+    <div id="step-confirm" style="display:none">
+      <div class="field-lbl">מה בדיוק יש במנה? (ניתן לערוך)</div>
+      <div class="status-line" id="descStatus"></div>
+      <button class="secondary-btn" id="retryAnalyzeBtn" style="display:none;">ניסיון נוסף לניתוח אוטומטי</button>
+      <textarea id="descText" rows="4"></textarea>
+      <div class="field-lbl">הערות (אופציונלי - רמת רעב, רגש, הקשר וכו')</div>
+      <textarea id="notesText" rows="2" placeholder="למשל: אכלתי מהר בין פגישות, לא ממש הייתי רעבה"></textarea>
+      <button class="primary-btn" id="confirmBtn">אישור התיאור - הערך קלוריות</button>
+      <div class="status-line" id="calcStatus"></div>
+    </div>
+
+    <div id="step-result" style="display:none">
+      <div class="field-lbl">הערכת קלוריות וחלבון - אפשר לערוך כל מספר</div>
+      <div id="breakdownBox"></div>
+      <div class="nums-box">
+        <div class="num-card"><input type="number" id="resCal" class="v" style="width:100%;text-align:center;border:none;background:transparent;"><div class="l">קלוריות</div></div>
+        <div class="num-card"><input type="number" step="0.1" id="resProt" class="v" style="width:100%;text-align:center;border:none;background:transparent;"><div class="l">חלבון (ג')</div></div>
+      </div>
+      <div class="status-line" id="saveStatus"></div>
+      <button class="primary-btn" id="saveBtn">שמירה ליומן</button>
+      <button class="secondary-btn" id="redoBtn">ערכי תיאור</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="injModalBg">
+  <div class="modal">
+    <button class="close-x" id="closeInjModal">×</button>
+    <h2 id="injModalTitle">הוספת מדידה</h2>
+
+    <div class="field-lbl">תאריך</div>
+    <input type="date" id="injDate">
+
+    <div class="field-lbl">הזרקה</div>
+    <div class="slot-pick">
+      <div class="did-chip" id="injDidChip">הזרקתי</div>
+      <div class="did-chip" id="injSkipChip">לא הזרקתי / דילגתי</div>
+    </div>
+    <div id="injDoseWrap">
+      <div class="field-lbl">מספר הזרקה</div>
+      <input type="text" id="injNumber" placeholder="ממלא אוטומטית">
+      <div class="field-lbl">מינון</div>
+      <input type="text" id="injDose" placeholder='למשל: 5 מ"ג'>
+    </div>
+
+    <div class="field-lbl">משקל (ק"ג, אופציונלי)</div>
+    <input type="text" id="injWeight" placeholder="למשל: 65.4">
+
+    <div class="field-lbl">יום בסייקל (אופציונלי)</div>
+    <input type="text" id="injCycleDay" placeholder="למשל: 1">
+
+    <div class="field-lbl">מס' אימוני כח (אופציונלי)</div>
+    <input type="text" id="injStrength" placeholder="למשל: 1">
+
+    <div class="field-lbl">הערות (אופציונלי)</div>
+    <textarea id="injNotes" rows="2" placeholder="קונטקסט, תופעות לוואי, וכו'"></textarea>
+
+    <div class="status-line" id="injStatus"></div>
+    <button class="primary-btn" id="saveInjBtn">שמירה</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, setDoc, deleteDoc,
+  getDocs, query, orderBy, startAt, endAt, documentId
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDCkssqd6ZCygA5XXORmy6NF-nOZCUFniw",
+  authDomain: "food-journal-f199b.firebaseapp.com",
+  projectId: "food-journal-f199b",
+  storageBucket: "food-journal-f199b.firebasestorage.app",
+  messagingSenderId: "356721531811",
+  appId: "1:356721531811:web:d7135c3c202ca383c51816"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const KV = collection(db, 'kv');
+
+// ---------- window.storage shim, backed by Firestore (same interface as Claude artifacts) ----------
+async function fsGet(key){
+  try{
+    const snap = await getDoc(doc(KV, key));
+    if(!snap.exists()) return null;
+    return { key, value: snap.data().value };
+  }catch(e){ throw new Error('Storage get failed: ' + e.message); }
+}
+async function fsSet(key, value){
+  try{
+    await setDoc(doc(KV, key), { value });
+    return { key, value };
+  }catch(e){ throw new Error('Storage set failed: ' + e.message); }
+}
+async function fsDelete(key){
+  try{
+    await deleteDoc(doc(KV, key));
+    return { key, deleted: true };
+  }catch(e){ throw new Error('Storage delete failed: ' + e.message); }
+}
+async function fsList(prefix){
+  try{
+    const q = query(KV, orderBy(documentId()), startAt(prefix), endAt(prefix + '\uf8ff'));
+    const snaps = await getDocs(q);
+    return { keys: snaps.docs.map(d => d.id) };
+  }catch(e){ throw new Error('Storage list failed: ' + e.message); }
+}
+window.storage = {
+  get: (key, shared) => fsGet(key),
+  set: (key, value, shared) => fsSet(key, value),
+  delete: (key, shared) => fsDelete(key),
+  list: (prefix, shared) => fsList(prefix)
+};
+
+// ---------- Anthropic API (via Netlify Function proxy - key never reaches the browser) ----------
+const ANTHROPIC_MODEL = "claude-sonnet-4-6";
+
+async function anthropicRequest(body, attempt=1){
+  let resp;
+  try{
+    resp = await fetch('/.netlify/functions/claude-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  }catch(networkErr){
+    if(attempt < 3) return anthropicRequest(body, attempt+1);
+    throw new Error('בעיית רשת: ' + networkErr.message);
+  }
+  let data;
+  try{ data = await resp.json(); }
+  catch(parseErr){ throw new Error('תשובה לא תקינה מהשרת (status ' + resp.status + ')'); }
+  if(data.error){
+    const msg = data.error.message || data.error.type || '';
+    if((resp.status===429 || resp.status===503 || /overloaded/i.test(msg)) && attempt < 3){
+      await new Promise(r=>setTimeout(r, 1000*attempt));
+      return anthropicRequest(body, attempt+1);
+    }
+    throw new Error(msg || 'Anthropic API error');
+  }
+  const textParts = (data.content || []).filter(c=>c.type==='text' && c.text).map(c=>c.text);
+  if(!textParts.length) throw new Error('לא התקבל טקסט מהמודל');
+  return textParts.join('\n');
+}
+
+async function callClaude(messages){
+  return await anthropicRequest({ model: ANTHROPIC_MODEL, max_tokens: 1000, messages });
+}
+async function callClaudeWithSearch(promptText){
+  return await anthropicRequest({
+    model: ANTHROPIC_MODEL, max_tokens: 1000,
+    messages: [{ role:'user', content: promptText }],
+    tools: [{ type: 'web_search_20250305', name: 'web_search' }]
+  });
+}
+
+const SLOTS = [
+  {key:'בוקר', from:360, to:660},   // 06:00–10:59
+  {key:'ביניים', from:660, to:750},  // 11:00–12:29
+  {key:'צהריים', from:750, to:900},  // 12:30–14:59
+  {key:'אחה"צ', from:900, to:1140}, // 15:00–18:59
+  {key:'ערב', from:1140, to:1260},  // 19:00–20:59
+  {key:'לילה', from:1260, to:1800}  // 21:00–23:59 (and wraps to 00:00–05:59)
+];
+
+function slotForHour(h, m=0){
+  let totalMin = h*60 + (m||0);
+  if(totalMin < 360) totalMin += 1440; // before 06:00 counts as a continuation of "night"
+  for(const s of SLOTS){ if(totalMin>=s.from && totalMin<s.to) return s.key; }
+  return 'לילה';
+}
+
+function todayStr(d=new Date()){
+  return d.toISOString().slice(0,10);
+}
+function heDate(d=new Date()){
+  return d.toLocaleDateString('he-IL', {weekday:'long', day:'numeric', month:'long'});
+}
+
+document.getElementById('todayLabel').textContent = heDate();
+
+// ---------- tabs ----------
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('view-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='history') renderHistory();
+    if(t.dataset.tab==='presets') renderPresets();
+    if(t.dataset.tab==='injections'){ renderInjections(); }
+  };
+});
+
+// ---------- personal presets ----------
+async function getPresets(){
+  try{
+    const r = await window.storage.get('presets', false);
+    return r && r.value ? JSON.parse(r.value) : [];
+  }catch(e){ return []; }
+}
+async function setPresets(list){
+  await window.storage.set('presets', JSON.stringify(list), false);
+}
+async function renderPresets(){
+  const list = await getPresets();
+  const el = document.getElementById('presetsList');
+  if(list.length===0){ el.innerHTML=''; }
+  else {
+    el.innerHTML = list.map((p,i)=>`
+      <div class="entry-card" style="align-items:center;">
+        <div class="entry-body">
+          <div class="entry-desc"><b>${p.keyword}</b> → ${p.note}</div>
+          <div class="entry-nums"><span><b>${p.calories}</b> קל'</span><span><b>${p.protein}</b>ג' חלבון</span></div>
+        </div>
+        <div>
+          <button class="preset-del" data-i="${i}" data-action="edit">עריכה</button>
+          <span style="color:var(--line);"> · </span>
+          <button class="preset-del" data-i="${i}" data-action="del">מחיקה</button>
+        </div>
+      </div>`).join('');
+    el.querySelectorAll('.preset-del').forEach(b=>{
+      b.onclick = async ()=>{
+        const i = Number(b.dataset.i);
+        if(b.dataset.action==='edit'){
+          const list3 = await getPresets();
+          startEditPreset(i, list3[i]);
+          return;
+        }
+        const list2 = await getPresets();
+        list2.splice(i,1);
+        await setPresets(list2);
+        cachedPresets = list2;
+        renderPresets();
+      };
+    });
+  }
+}
+
+let editingPresetIndex = null;
+function startEditPreset(i, p){
+  editingPresetIndex = i;
+  document.getElementById('presetKeyword').value = p.keyword;
+  document.getElementById('presetNote').value = p.note;
+  document.getElementById('presetCal').value = p.calories;
+  document.getElementById('presetProt').value = p.protein;
+  document.getElementById('addPresetBtn').textContent = 'עדכון קבוע';
+  document.getElementById('cancelPresetEditBtn').style.display='block';
+}
+function resetPresetForm(){
+  editingPresetIndex = null;
+  document.getElementById('presetKeyword').value='';
+  document.getElementById('presetNote').value='';
+  document.getElementById('presetCal').value='';
+  document.getElementById('presetProt').value='';
+  document.getElementById('presetUrl').value='';
+  document.getElementById('presetUrlStatus').textContent='';
+  document.getElementById('addPresetBtn').textContent = 'הוספת קבוע';
+  document.getElementById('cancelPresetEditBtn').style.display='none';
+}
+document.getElementById('cancelPresetEditBtn').onclick = resetPresetForm;
+
+document.getElementById('fetchUrlBtn').onclick = async ()=>{
+  const url = document.getElementById('presetUrl').value.trim();
+  const statusEl = document.getElementById('presetUrlStatus');
+  if(!url){ statusEl.textContent = 'הדביקי קישור למוצר.'; return; }
+  const btn = document.getElementById('fetchUrlBtn');
+  btn.disabled = true;
+  statusEl.textContent = 'מחפשת ערכים תזונתיים ברשת...';
+  try{
+    const prompt = `זהו קישור למוצר מזון: ${url}\nחפשי ברשת את הערכים התזונתיים הרשמיים של המוצר הזה (לפי היצרן או החנות). תני קלוריות וחלבון ליחידה סטנדרטית ומתאימה של המוצר (למשל קופסה שלמה, בקבוק, או 100 גרם - כמו שהגיוני למוצר הזה). החזירי אך ורק JSON תקני בלי טקסט נוסף ובלי markdown, בפורמט:
+{"name":"שם קצר של המוצר","note":"תיאור הכמות שעליה מתייחסים הערכים","calories":number,"protein":number}`;
+    const text = await callClaudeWithSearch(prompt);
+    const match = text.replace(/\`\`\`json|\`\`\`/g,'').match(/\{[\s\S]*\}/);
+    if(!match) throw new Error('לא התקבל JSON תקין מהתשובה');
+    const result = JSON.parse(match[0]);
+    if(!document.getElementById('presetKeyword').value.trim()){
+      document.getElementById('presetKeyword').value = result.name || '';
+    }
+    document.getElementById('presetNote').value = result.note || '';
+    document.getElementById('presetCal').value = result.calories!=null ? result.calories : '';
+    document.getElementById('presetProt').value = result.protein!=null ? result.protein : '';
+    statusEl.textContent = 'מולא אוטומטית מהחיפוש - בדקי ותקני במידת הצורך לפני שמירה.';
+  }catch(e){
+    statusEl.textContent = 'לא הצלחתי לשלוף ערכים מהקישור (' + (e.message||e) + '). אפשר להזין ידנית.';
+  }
+  btn.disabled = false;
+};
+
+document.getElementById('addPresetBtn').onclick = async ()=>{
+  const keyword = document.getElementById('presetKeyword').value.trim();
+  const note = document.getElementById('presetNote').value.trim();
+  const calories = parseFloat(document.getElementById('presetCal').value);
+  const protein = parseFloat(document.getElementById('presetProt').value);
+  if(!keyword || !note || isNaN(calories) || isNaN(protein)) return;
+  const list = await getPresets();
+  if(editingPresetIndex!=null && list[editingPresetIndex]){
+    list[editingPresetIndex] = {keyword, note, calories, protein};
+  } else {
+    list.push({keyword, note, calories, protein});
+  }
+  await setPresets(list);
+  cachedPresets = list;
+  resetPresetForm();
+  renderPresets();
+};
+
+// ---------- storage helpers ----------
+// Each entry lives in its own Firestore document (key: entries:<date>:<id>).
+// This keeps every document tiny regardless of how much history accumulates,
+// avoiding Firestore's hard 1MB-per-document ceiling that a single combined
+// document would eventually hit once enough photos pile up.
+let entriesCache = null; // in-memory cache for this session, keyed by id
+async function loadAllEntriesFromStore(){
+  const byId = {};
+  try{
+    const res = await window.storage.list('entries:', true);
+    if(res && res.keys && res.keys.length){
+      for(const k of res.keys){
+        try{
+          const r = await window.storage.get(k, true);
+          if(r && r.value){
+            const entry = JSON.parse(r.value);
+            if(entry && entry.id) byId[entry.id] = entry;
+          }
+        }catch(e){}
+      }
+    }
+  }catch(e){}
+
+  // one-time migration: pull in anything still sitting only in the old combined
+  // "entries" doc (from before this fix) and write it out as per-entry docs.
+  try{
+    const old = await window.storage.get('entries', true);
+    if(old && old.value){
+      const oldList = JSON.parse(old.value);
+      for(const entry of (oldList||[])){
+        if(entry && entry.id && !byId[entry.id]){
+          byId[entry.id] = entry;
+          try{ await window.storage.set('entries:'+entry.date+':'+entry.id, JSON.stringify(entry), true); }catch(e){}
+        }
+      }
+      // clear the old combined doc so it can't grow past the limit again
+      try{ await window.storage.delete('entries', true); }catch(e){}
+    }
+  }catch(e){}
+
+  return byId;
+}
+async function getAllEntriesRaw(){
+  if(!entriesCache) entriesCache = await loadAllEntriesFromStore();
+  return Object.values(entriesCache);
+}
+async function saveEntry(entry){
+  if(!entriesCache) entriesCache = await loadAllEntriesFromStore();
+  entriesCache[entry.id] = entry;
+  await window.storage.set('entries:'+entry.date+':'+entry.id, JSON.stringify(entry), true);
+}
+async function deleteEntry(date, id){
+  if(!entriesCache) entriesCache = await loadAllEntriesFromStore();
+  delete entriesCache[id];
+  await window.storage.delete('entries:'+date+':'+id, true);
+}
+let entryMap = {};
+async function listAllEntries(){
+  const entries = await getAllEntriesRaw();
+  entries.sort((a,b)=>{
+    if(a.date !== b.date) return a.date < b.date ? 1 : -1;
+    const at = a.time || '', bt = b.time || '';
+    if(!at && bt) return -1;
+    if(at && !bt) return 1;
+    if(at === bt) return 0;
+    return at < bt ? 1 : -1;
+  });
+  entryMap = {};
+  entries.forEach(e=> entryMap[e.id]=e);
+  return entries;
+}
+
+// ---------- today view ----------
+async function renderToday(){
+  const all = await listAllEntries();
+  const t = todayStr();
+  const todays = all.filter(e=>e.date===t);
+  const list = document.getElementById('todayList');
+  if(todays.length===0){
+    list.innerHTML = '<div class="empty-note">עדיין לא תועד אוכל היום. לחצי על "תיעוד אכילה" כדי להתחיל.</div>';
+  } else {
+    list.innerHTML = todays.map(entryCardHtml).join('');
+  }
+  const totalCal = todays.reduce((s,e)=>s+(e.calories||0),0);
+  const totalProt = todays.reduce((s,e)=>s+(e.protein||0),0);
+  document.getElementById('todayCal').textContent = smartRound(totalCal);
+  document.getElementById('todayProt').textContent = smartRound(totalProt);
+  attachDelHandlers();
+}
+
+function entryCardHtml(e){
+  return `<div class="entry-card">
+    ${e.thumb ? `<img src="${e.thumb}">` : '<div style="width:64px;height:64px;border-radius:10px;background:#e6dfcb;flex-shrink:0;"></div>'}
+    <div class="entry-body">
+      <div class="entry-top">
+        <span class="slot-badge">${e.slot}</span>
+        <span class="entry-time">${e.time}</span>
+      </div>
+      <div class="entry-desc">${e.description}</div>
+      ${e.notes ? `<div class="entry-desc" style="color:var(--ink-soft); font-style:italic; font-size:12.5px;">📝 ${e.notes}</div>` : ''}
+      <div class="entry-nums"><span><b>${smartRound(e.calories)}</b> קל'</span><span><b>${smartRound(e.protein)}</b>ג' חלבון</span></div>
+      <div>
+        <button class="entry-del" data-id="${e.id}" data-action="edit">עריכה</button>
+        <span style="color:var(--line);"> · </span>
+        <button class="entry-del" data-date="${e.date}" data-id="${e.id}" data-action="del">מחיקה</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function attachDelHandlers(){
+  document.querySelectorAll('.entry-del').forEach(b=>{
+    b.onclick = async ()=>{
+      if(b.dataset.action==='edit'){
+        openEditEntry(entryMap[b.dataset.id]);
+        return;
+      }
+      await deleteEntry(b.dataset.date, b.dataset.id);
+      renderToday(); renderHistory();
+    };
+  });
+}
+
+function toInputTimeValue(timeStr){
+  const m = (timeStr||'').match(/(\d{1,2}):(\d{2})/);
+  if(!m) return '';
+  return m[1].padStart(2,'0')+':'+m[2];
+}
+
+function openEditEntry(entry){
+  if(!entry) return;
+  currentEntry = JSON.parse(JSON.stringify(entry));
+  currentEntry.__isEditing = true;
+  currentEntry.__editingOriginalDate = entry.date;
+  currentEntry.__editingOriginalId = entry.id;
+  currentEntry._autoSlot = entry.slot;
+  currentEntry._autoTime = entry.time;
+
+  document.getElementById('modalTitle').textContent = 'עריכת רשומה';
+  document.getElementById('entryDate').value = entry.date;
+  document.getElementById('entryTime').value = toInputTimeValue(entry.time);
+  renderSlotPicker();
+
+  document.getElementById('photoInputCamera').value='';
+  document.getElementById('photoInputGallery').value='';
+  if(entry.thumb){
+    document.getElementById('previewImg').src = entry.thumb;
+    document.getElementById('previewWrap').style.display='block';
+  } else {
+    document.getElementById('previewWrap').style.display='none';
+  }
+  document.getElementById('analyzeStatus').textContent='';
+
+  document.getElementById('descText').value = entry.description || '';
+  document.getElementById('notesText').value = entry.notes || '';
+  document.getElementById('descText').placeholder='';
+  document.getElementById('descStatus').textContent='';
+  document.getElementById('retryAnalyzeBtn').style.display='none';
+  document.getElementById('calcStatus').textContent='';
+
+  document.getElementById('resCal').value = smartRound(entry.calories||0);
+  document.getElementById('resProt').value = smartRound(entry.protein||0);
+  renderBreakdownEditable(entry.breakdown||[]);
+  document.getElementById('saveStatus').textContent='';
+
+  document.getElementById('step-photo').style.display='block';
+  document.getElementById('step-confirm').style.display='none';
+  document.getElementById('step-result').style.display='block';
+
+  modalBg.classList.add('active');
+}
+
+// ---------- history view ----------
+let expandedHistoryDate = null;
+async function renderHistory(){
+  const all = await listAllEntries();
+  const byDate = {};
+  all.forEach(e=>{
+    byDate[e.date] = byDate[e.date] || {cal:0, prot:0, count:0};
+    byDate[e.date].cal += e.calories||0;
+    byDate[e.date].prot += e.protein||0;
+    byDate[e.date].count++;
+  });
+  const dates = Object.keys(byDate).sort().reverse();
+  const el = document.getElementById('histList');
+  if(dates.length===0){ el.innerHTML = '<div class="empty-note">אין עדיין היסטוריה.</div>'; return; }
+  el.innerHTML = dates.map(d=>{
+    const dd = new Date(d+'T12:00:00');
+    const isOpen = expandedHistoryDate === d;
+    const rowHtml = `<div class="hist-row" data-date="${d}">
+      <div>
+        <div class="date">${isOpen?'▾':'▸'} ${dd.toLocaleDateString('he-IL',{weekday:'short', day:'numeric', month:'short'})}</div>
+        <div style="font-size:11px;color:var(--ink-soft)">${byDate[d].count} רשומות</div>
+      </div>
+      <div class="cal">${smartRound(byDate[d].cal)} קל' · ${smartRound(byDate[d].prot)}ג' חלבון</div>
+    </div>`;
+    let detailHtml = '';
+    if(isOpen){
+      const dayEntries = all.filter(e=>e.date===d);
+      detailHtml = `<div style="padding:10px 2px 4px;">` + dayEntries.map(entryCardHtml).join('') + `</div>`;
+    }
+    return rowHtml + detailHtml;
+  }).join('');
+  el.querySelectorAll('.hist-row').forEach(r=>{
+    r.onclick = ()=>{
+      const d = r.dataset.date;
+      expandedHistoryDate = (expandedHistoryDate===d) ? null : d;
+      renderHistory();
+    };
+  });
+  attachDelHandlers();
+}
+
+// ---------- add flow ----------
+const modalBg = document.getElementById('modalBg');
+const addFab = document.getElementById('addFab');
+let currentEntry = {};
+
+let cachedPresets = [];
+
+function resetModal(){
+  currentEntry = {id: 'e'+Date.now()+Math.random().toString(36).slice(2,7)};
+  document.getElementById('modalTitle').textContent = 'תיעוד אכילה';
+  document.getElementById('step-photo').style.display='block';
+  document.getElementById('step-confirm').style.display='none';
+  document.getElementById('step-result').style.display='none';
+  document.getElementById('previewWrap').style.display='none';
+  document.getElementById('analyzeStatus').textContent='';
+  document.getElementById('descText').value='';
+  document.getElementById('notesText').value='';
+  document.getElementById('descText').placeholder='';
+  document.getElementById('descStatus').textContent='';
+  document.getElementById('retryAnalyzeBtn').style.display='none';
+  document.getElementById('calcStatus').textContent='';
+  document.getElementById('photoInputCamera').value='';
+  document.getElementById('photoInputGallery').value='';
+  const now = new Date();
+  currentEntry.date = todayStr(now);
+  currentEntry.time = now.toTimeString().slice(0,5);
+  currentEntry.slot = slotForHour(now.getHours(), now.getMinutes());
+  currentEntry._autoSlot = currentEntry.slot;
+  currentEntry._autoTime = currentEntry.time;
+  document.getElementById('entryDate').value = todayStr(now);
+  document.getElementById('entryTime').value = currentEntry.time;
+  renderSlotPicker();
+  getPresets().then(p=> cachedPresets = p).catch(()=>{});
+}
+
+document.getElementById('entryDate').onchange = (e)=>{ currentEntry.date = e.target.value; };
+document.getElementById('entryTime').onchange = (e)=>{
+  currentEntry.time = e.target.value; // HH:MM 24h, or '' if cleared - meal-time chip stays as chosen
+};
+
+const SLOT_DEFAULT_TIME = {
+  'בוקר':'09:00', 'ביניים':'11:00', 'צהריים':'13:00',
+  'אחה"צ':'16:00', 'ערב':'19:00', 'לילה':'22:00'
+};
+
+function escapeAttr2(s){ return String(s).replace(/"/g,'&quot;'); }
+
+function renderSlotPicker(){
+  const uniqueLabels = ['בוקר','ביניים','צהריים','אחה"צ','ערב','לילה'];
+  document.getElementById('slotPick').innerHTML = uniqueLabels.map(l=>
+    `<div class="slot-chip ${l===currentEntry.slot?'sel':''}" data-slot="${escapeAttr2(l)}">${l}</div>`
+  ).join('');
+  document.querySelectorAll('.slot-chip').forEach(c=>{
+    c.onclick = ()=>{
+      const prevSlot = currentEntry.slot;
+      currentEntry.slot = c.dataset.slot;
+      document.querySelectorAll('.slot-chip').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      if(currentEntry.slot !== prevSlot){
+        // switching to a different meal-time bucket always fills its fixed default time (editable afterward)
+        const dt = SLOT_DEFAULT_TIME[currentEntry.slot] || '';
+        currentEntry.time = dt;
+        document.getElementById('entryTime').value = dt;
+      }
+    };
+  });
+}
+
+addFab.onclick = ()=>{ resetModal(); modalBg.classList.add('active'); };
+document.getElementById('closeModal').onclick = ()=> modalBg.classList.remove('active');
+
+function readFileAsDataUrl(file){
+  return new Promise((resolve, reject)=>{
+    const r = new FileReader();
+    r.onload = ()=> resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+function resizeImage(file, maxDim){
+  return new Promise((resolve, reject)=>{
+    readFileAsDataUrl(file).then(dataUrl=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let {width,height} = img;
+        if(width>height){ if(width>maxDim){ height*=maxDim/width; width=maxDim; } }
+        else { if(height>maxDim){ width*=maxDim/height; height=maxDim; } }
+        const canvas = document.createElement('canvas');
+        canvas.width=width; canvas.height=height;
+        canvas.getContext('2d').drawImage(img,0,0,width,height);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.onerror = reject;
+      img.src = dataUrl;
+    }).catch(reject);
+  });
+}
+
+async function handlePhotoFile(file){
+  if(!file) return;
+  document.getElementById('step-result').style.display='none';
+  document.getElementById('analyzeStatus').textContent = 'מעבדת תמונה...';
+  let mainUrl;
+  try{
+    mainUrl = await resizeImage(file, 500);
+    currentEntry.imageBase64 = mainUrl.split(',')[1];
+    document.getElementById('previewImg').src = mainUrl;
+    document.getElementById('previewWrap').style.display='block';
+    currentEntry.thumb = mainUrl;
+  }catch(e){
+    document.getElementById('analyzeStatus').textContent = 'לא הצלחתי לקרוא את התמונה. נסי תמונה אחרת.';
+    return;
+  }
+  document.getElementById('analyzeStatus').textContent = '';
+
+  // Move straight to manual description entry - never block on AI analysis.
+  document.getElementById('descText').value = '';
+  document.getElementById('descText').placeholder = 'מנתחת את התמונה ברקע... אפשר להתחיל לכתוב כאן בכל רגע';
+  document.getElementById('descStatus').textContent = '';
+  document.getElementById('step-confirm').style.display='block';
+
+  // shrink a lighter thumbnail for storage, off the critical path (doesn't block analysis)
+  resizeImage(file, 220).then(t=>{ currentEntry.thumb = t; }).catch(()=>{});
+
+  try{
+    const desc = await analyzeImage(currentEntry.imageBase64);
+    // only autofill if the user hasn't already started typing
+    if(!document.getElementById('descText').value.trim()){
+      document.getElementById('descText').value = desc;
+    }
+    document.getElementById('descText').placeholder = '';
+    document.getElementById('retryAnalyzeBtn').style.display='none';
+  }catch(e){
+    document.getElementById('descText').placeholder = 'תיאור המנה (כתבי ידנית)';
+    document.getElementById('descStatus').textContent = 'ניתוח אוטומטי של התמונה לא הצליח (' + (e.message||e) + '). כתבי את התיאור ידנית, או נסי שוב.';
+    document.getElementById('retryAnalyzeBtn').style.display='block';
+  }
+}
+
+document.getElementById('retryAnalyzeBtn').onclick = async ()=>{
+  if(!currentEntry.imageBase64) return;
+  document.getElementById('descStatus').textContent = 'מנתחת שוב...';
+  try{
+    const desc = await analyzeImage(currentEntry.imageBase64);
+    document.getElementById('descText').value = desc;
+    document.getElementById('descStatus').textContent = '';
+    document.getElementById('retryAnalyzeBtn').style.display='none';
+  }catch(e){
+    document.getElementById('descStatus').textContent = 'עדיין נכשל (' + (e.message||e) + ').';
+  }
+};
+
+document.getElementById('photoInputCamera').onchange = (ev)=> handlePhotoFile(ev.target.files[0]);
+document.getElementById('photoInputGallery').onchange = (ev)=> handlePhotoFile(ev.target.files[0]);
+
+document.getElementById('noPhotoBtn').onclick = ()=>{
+  currentEntry.thumb = null;
+  currentEntry.imageBase64 = null;
+  document.getElementById('previewWrap').style.display='none';
+  document.getElementById('analyzeStatus').textContent='';
+  document.getElementById('descText').value='';
+  document.getElementById('descText').placeholder='תיאור המנה';
+  document.getElementById('descStatus').textContent='';
+  document.getElementById('retryAnalyzeBtn').style.display='none';
+  document.getElementById('calcStatus').textContent='';
+  document.getElementById('step-result').style.display='none';
+  document.getElementById('step-confirm').style.display='block';
+  document.getElementById('descText').focus();
+};
+
+async function analyzeImage(base64){
+  const messages = [{
+    role:'user',
+    content:[
+      {type:'image', source:{type:'base64', media_type:'image/jpeg', data:base64}},
+      {type:'text', text:'זו תמונה של מנת אוכל. תני תיאור קצר בעברית של המרכיבים והכמות המשוערת שלהם (לדוגמה: "כוס אורז לבן, חצי חזה עוף בגריל, כף קארי צהוב"). אם משהו לא ברור, ציין זאת בקצרה. החזירי רק את התיאור בעברית, בלי הקדמות ובלי JSON.'}
+    ]
+  }];
+  const text = await callClaude(messages);
+  const trimmed = text.trim();
+  if(!trimmed) throw new Error('empty description');
+  return trimmed;
+}
+
+function escapeAttr(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+}
+function smartRound(v){
+  v = Number(v)||0;
+  const r1 = Math.round(v*10)/10;
+  return r1 % 1 === 0 ? Math.round(r1) : r1;
+}
+
+function renderBreakdownEditable(breakdown){
+  const box = document.getElementById('breakdownBox');
+  box.innerHTML = (breakdown||[]).map((b,i)=>`
+    <div class="breakdown-row">
+      <input type="text" class="bd-item" data-i="${i}" value="${escapeAttr(b.item)}">
+      <input type="number" class="bd-cal" data-i="${i}" value="${smartRound(b.calories||0)}"><span class="bd-unit">קל'</span>
+      <input type="number" step="0.1" class="bd-prot" data-i="${i}" value="${smartRound(b.protein||0)}"><span class="bd-unit">ג'</span>
+    </div>`).join('');
+  wireBreakdownInputs();
+}
+
+function wireBreakdownInputs(){
+  const recompute = ()=>{
+    let sc=0, sp=0;
+    document.querySelectorAll('.bd-cal').forEach(c=> sc += parseFloat(c.value)||0);
+    document.querySelectorAll('.bd-prot').forEach(p=> sp += parseFloat(p.value)||0);
+    document.getElementById('resCal').value = smartRound(sc);
+    document.getElementById('resProt').value = smartRound(sp);
+  };
+  document.querySelectorAll('.bd-cal, .bd-prot').forEach(el=> el.oninput = recompute);
+}
+
+function collectBreakdownFromUI(){
+  const items = document.querySelectorAll('.bd-item');
+  const cals = document.querySelectorAll('.bd-cal');
+  const prots = document.querySelectorAll('.bd-prot');
+  const arr = [];
+  items.forEach((el,i)=>{
+    arr.push({item: el.value, calories: parseFloat(cals[i].value)||0, protein: parseFloat(prots[i].value)||0});
+  });
+  return arr;
+}
+
+document.getElementById('confirmBtn').onclick = async ()=>{
+  currentEntry.description = document.getElementById('descText').value.trim();
+  currentEntry.notes = document.getElementById('notesText').value.trim();
+  const calcStatus = document.getElementById('calcStatus');
+  calcStatus.textContent = '';
+  if(!currentEntry.description){ calcStatus.textContent = 'כתבי או תמללי תיאור לפני החישוב.'; return; }
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = true; btn.textContent = 'מחשבת קלוריות...';
+  try{
+    const est = await estimateNutrition(currentEntry.description);
+    currentEntry.calories = est.calories;
+    currentEntry.protein = est.protein;
+    currentEntry.breakdown = est.breakdown || [];
+    document.getElementById('resCal').value = smartRound(est.calories);
+    document.getElementById('resProt').value = smartRound(est.protein);
+    renderBreakdownEditable(est.breakdown||[]);
+    document.getElementById('step-confirm').style.display='none';
+    document.getElementById('step-result').style.display='block';
+  }catch(e){
+    calcStatus.textContent = 'שגיאה בחישוב: ' + (e.message||e);
+  }
+  btn.disabled = false; btn.textContent = 'אישור התיאור - הערך קלוריות';
+};
+
+async function estimateNutrition(description){
+  const presets = cachedPresets && cachedPresets.length ? cachedPresets : await getPresets();
+  const matched = presets.filter(p => description.includes(p.keyword));
+  let knownBlock = '';
+  if(matched.length){
+    knownBlock = '\n\nהערכים הבאים ידועים במדויק (מהאריזה) - השתמשי בהם כמו שהם, בלי להעריך אותם מחדש:\n' +
+      matched.map(p=>`- "${p.keyword}" = ${p.note}: ${p.calories} קלוריות, ${p.protein} גרם חלבון.`).join('\n') +
+      '\nהערכי רק את שאר הפריטים שמופיעים בתיאור ולא מכוסים ברשימה הזו, וסכמי הכל יחד.';
+  }
+  const prompt = `זהו תיאור של מנת אוכל: "${description}".${knownBlock}
+
+לכל פריט בתיאור (שאינו ברשימת הערכים הידועים למעלה) - **חפשי באינטרנט** את הערך התזונתי הרשמי שלו (קלוריות וחלבון ל-100 גרם, או לפי יחידה סטנדרטית אם רלוונטי, ממקור אמין כמו טבלת ערכים תזונתיים/USDA/יצרן). אל תסתמכי על הערכה מהזיכרון בלבד - בדקי בפועל. אחר כך התאימי את הערך לכמות שמתוארת (משקל בגרם, או מספר יחידות כפול ערך ליחידה).
+
+תני הערכה תזונתית מדויקת ככל האפשר לכל המנה, מבוססת על הערכים שמצאת בחיפוש. החזירי אך ורק JSON תקני בפורמט הבא, בלי טקסט נוסף ובלי markdown:
+{"calories": number, "protein": number, "breakdown": [{"item": "string", "calories": number, "protein": number}]}`;
+  const text = await callClaudeWithSearch(prompt);
+  const match = text.replace(/\`\`\`json|\`\`\`/g,'').match(/\{[\s\S]*\}/);
+  if(!match) throw new Error('לא התקבל JSON תקין מהתשובה');
+  return JSON.parse(match[0]);
+}
+
+document.getElementById('redoBtn').onclick = ()=>{
+  document.getElementById('step-result').style.display='none';
+  document.getElementById('step-confirm').style.display='block';
+};
+
+document.getElementById('saveBtn').onclick = async ()=>{
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true; btn.textContent = 'שומרת...';
+  try{
+    currentEntry.calories = parseFloat(document.getElementById('resCal').value)||0;
+    currentEntry.protein = parseFloat(document.getElementById('resProt').value)||0;
+    currentEntry.breakdown = collectBreakdownFromUI();
+    const wasEditing = currentEntry.__isEditing;
+    const originalDate = currentEntry.__editingOriginalDate;
+    const originalId = currentEntry.__editingOriginalId;
+    delete currentEntry.__isEditing;
+    delete currentEntry.__editingOriginalDate;
+    delete currentEntry.__editingOriginalId;
+    delete currentEntry._autoSlot;
+    delete currentEntry._autoTime;
+    await saveEntry(currentEntry);
+    if(wasEditing && (originalDate !== currentEntry.date || originalId !== currentEntry.id)){
+      await deleteEntry(originalDate, originalId);
+    }
+    modalBg.classList.remove('active');
+    renderToday(); renderHistory();
+  }catch(e){
+    document.getElementById('saveStatus').textContent = 'שגיאה בשמירה: ' + (e.message||e);
+  }
+  btn.disabled = false; btn.textContent = 'שמירה ליומן';
+};
+
+// ---------- menstrual cycle phase lookup (day is entered manually per entry) ----------
+function phaseForCycleDay(dayNum){
+  if(dayNum==null || isNaN(dayNum)) return null;
+  if(dayNum<=5) return 'וסת';
+  if(dayNum<=13) return 'פוליקולרי';
+  if(dayNum===14) return 'ביוץ';
+  if(dayNum<=28) return 'לוטאלי';
+  return 'מחזור ממושך';
+}
+function weeksLabel(weeks){
+  if(weeks==null) return null;
+  if(weeks===0) return '0';
+  if(weeks%4===0){
+    const months = weeks/4;
+    return weeks + (months===1 ? ' (חודש)' : ` (${months} חודשים)`);
+  }
+  return String(weeks);
+}
+
+// ---------- injections / weight tracking ----------
+async function getAllInjectionsRaw(){
+  try{
+    const r = await window.storage.get('injections', true);
+    return r && r.value ? JSON.parse(r.value) : [];
+  }catch(e){ return []; }
+}
+async function saveAllInjectionsRaw(list){
+  await window.storage.set('injections', JSON.stringify(list), true);
+}
+let injectionsReconciledThisSession = false;
+async function reconcileInjectionsFromBackup(){
+  const existing = await getAllInjectionsRaw();
+  if(injectionsReconciledThisSession) return existing;
+  injectionsReconciledThisSession = true;
+  const byId = {};
+  existing.forEach(e=> byId[e.id]=e);
+  let addedAny = false;
+  try{
+    const res = await window.storage.list('injbackup:', true);
+    if(res && res.keys && res.keys.length){
+      for(const k of res.keys){
+        try{
+          const r = await window.storage.get(k, true);
+          if(r && r.value){
+            const entry = JSON.parse(r.value);
+            if(entry && entry.id && !byId[entry.id]){ byId[entry.id] = entry; addedAny = true; }
+          }
+        }catch(e){}
+      }
+    }
+  }catch(e){}
+  const merged = Object.values(byId);
+  if(addedAny) await saveAllInjectionsRaw(merged);
+  return merged;
+}
+async function saveInjectionEntry(entry){
+  const list = await reconcileInjectionsFromBackup();
+  const idx = list.findIndex(e=>e.id===entry.id);
+  if(idx>=0) list[idx] = entry; else list.push(entry);
+  await saveAllInjectionsRaw(list);
+  try{ await window.storage.set('injbackup:'+entry.date+':'+entry.id, JSON.stringify(entry), true); }catch(e){}
+}
+async function deleteInjectionEntry(date, id){
+  const list = await reconcileInjectionsFromBackup();
+  await saveAllInjectionsRaw(list.filter(e=>e.id!==id));
+  try{ await window.storage.delete('injbackup:'+date+':'+id, true); }catch(e){}
+}
+let injectionMap = {};
+async function listInjections(){
+  const list = await reconcileInjectionsFromBackup();
+  list.sort((a,b)=> a.date < b.date ? -1 : (a.date > b.date ? 1 : 0));
+  injectionMap = {};
+  list.forEach(e=> injectionMap[e.id]=e);
+  return list;
+}
+
+async function renderInjections(){
+  const list = await listInjections();
+  document.getElementById('importHistBtn').style.display = list.length===0 ? 'block' : 'none';
+  document.getElementById('importHistStatus').style.display = list.length===0 ? 'block' : 'none';
+  const el = document.getElementById('injList');
+  if(list.length===0){
+    el.innerHTML = '<div class="empty-note">אין עדיין רשומות.</div>';
+    document.getElementById('injTotalLoss').textContent = '0';
+    document.getElementById('injLatestWeight').textContent = '-';
+    return;
+  }
+  const firstInjEntry = list.find(e=> e.injectionNumber===1) || list.find(e=> e.injectionNumber!=null);
+  const firstInjDate = firstInjEntry ? firstInjEntry.date : null;
+
+  let prevWeight = null, firstWeight = null, lastWeight = null;
+  const dataRows = list.map(e=>{
+    let prevDiffTxt = '-', totalDiffTxt = '-', weightTxt = e.weight!=null ? e.weight : '-';
+    if(e.weight!=null){
+      if(firstWeight==null) firstWeight = e.weight;
+      lastWeight = e.weight;
+      if(prevWeight!=null){
+        const diff = prevWeight - e.weight;
+        const arrow = diff>0 ? '↓' : (diff<0 ? '↑' : '·');
+        prevDiffTxt = `${arrow}${Math.abs(diff).toFixed(2)}`;
+      }
+      if(firstWeight!=null){
+        const totalDiff = firstWeight - e.weight;
+        const arrow2 = totalDiff>0 ? '↓' : (totalDiff<0 ? '↑' : '·');
+        totalDiffTxt = `${arrow2}${Math.abs(totalDiff).toFixed(2)}`;
+      }
+      prevWeight = e.weight;
+    }
+    const dd = new Date(e.date+'T12:00:00');
+    const dateLbl = dd.toLocaleDateString('he-IL',{day:'numeric', month:'numeric', year:'2-digit'});
+    const injLbl = e.skipped ? 'דילוג' : (e.injectionNumber!=null ? '#'+e.injectionNumber : '-');
+    const weeks = (firstInjDate && !e.skipped) ? Math.floor((new Date(e.date+'T00:00:00') - new Date(firstInjDate+'T00:00:00'))/86400000/7) : null;
+    const weeksTxt = (weeks!=null && weeks>=0) ? weeksLabel(weeks) : '-';
+    const cycTxt = (e.cycleDay!=null && e.cycleDay!=='') ? `${e.cycleDay} (${phaseForCycleDay(Number(e.cycleDay))})` : '-';
+    return {e, dateLbl, injLbl, dose: e.dose||'-', weeksTxt, weightTxt, prevDiffTxt, totalDiffTxt,
+      cycTxt, strengthTxt: e.strengthSessions!=null ? e.strengthSessions : '-', notes: e.notes||''};
+  });
+
+  document.getElementById('injTotalLoss').textContent = (firstWeight!=null && lastWeight!=null) ? (firstWeight-lastWeight).toFixed(2) : '0';
+  document.getElementById('injLatestWeight').textContent = lastWeight!=null ? lastWeight : '-';
+
+  const headers = ['תאריך','מנה','מינון','שבועות','משקל','שינוי','שינוי - סה"כ','סייקל','אימוני כח','הערות','&nbsp;'];
+  const bodyRows = dataRows.slice().reverse().map(r=>`
+    <tr>
+      <td>${r.dateLbl}</td>
+      <td>${r.injLbl}</td>
+      <td>${r.dose}</td>
+      <td>${r.weeksTxt}</td>
+      <td>${r.weightTxt}</td>
+      <td>${r.prevDiffTxt}</td>
+      <td>${r.totalDiffTxt}</td>
+      <td>${r.cycTxt}</td>
+      <td>${r.strengthTxt}</td>
+      <td style="white-space:normal; min-width:120px;">${r.notes}</td>
+      <td style="white-space:nowrap;">
+        <button class="inj-del" data-id="${r.e.id}" data-action="edit">✎</button>
+        <button class="inj-del" data-date="${r.e.date}" data-id="${r.e.id}" data-action="del">🗑</button>
+      </td>
+    </tr>`).join('');
+
+  el.innerHTML = `<div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <table class="inj-table">
+      <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${bodyRows}</tbody>
+    </table>
+  </div>`;
+
+  el.querySelectorAll('.inj-del').forEach(b=>{
+    b.onclick = async ()=>{
+      if(b.dataset.action==='edit'){ openEditInjection(injectionMap[b.dataset.id]); return; }
+      await deleteInjectionEntry(b.dataset.date, b.dataset.id);
+      renderInjections();
+    };
+  });
+}
+
+let currentInjection = {};
+let injModalEditing = false;
+
+function setInjDidState(did){
+  currentInjection.skipped = !did;
+  document.getElementById('injDidChip').classList.toggle('sel', did);
+  document.getElementById('injSkipChip').classList.toggle('sel', !did);
+  document.getElementById('injDoseWrap').style.display = did ? 'block' : 'none';
+}
+document.getElementById('injDidChip').onclick = ()=> setInjDidState(true);
+document.getElementById('injSkipChip').onclick = ()=> setInjDidState(false);
+
+function resetInjModal(){
+  currentInjection = {id: 'inj'+Date.now()+Math.random().toString(36).slice(2,7)};
+  injModalEditing = false;
+  document.getElementById('injModalTitle').textContent = 'הוספת מדידה';
+  document.getElementById('injDate').value = todayStr();
+  document.getElementById('injWeight').value = '';
+  document.getElementById('injCycleDay').value = '';
+  document.getElementById('injStrength').value = '';
+  document.getElementById('injDose').value = '';
+  document.getElementById('injNotes').value = '';
+  document.getElementById('injStatus').textContent = '';
+  setInjDidState(true);
+  listInjections().then(list=>{
+    const maxNum = list.reduce((m,e)=> e.injectionNumber!=null ? Math.max(m,e.injectionNumber) : m, 0);
+    document.getElementById('injNumber').value = maxNum+1;
+  });
+}
+
+document.getElementById('addInjBtn').onclick = ()=>{
+  resetInjModal();
+  document.getElementById('injModalBg').classList.add('active');
+};
+document.getElementById('closeInjModal').onclick = ()=> document.getElementById('injModalBg').classList.remove('active');
+
+function openEditInjection(entry){
+  if(!entry) return;
+  currentInjection = JSON.parse(JSON.stringify(entry));
+  injModalEditing = true;
+  currentInjection.__originalDate = entry.date;
+  currentInjection.__originalId = entry.id;
+  document.getElementById('injModalTitle').textContent = 'עריכת רשומה';
+  document.getElementById('injDate').value = entry.date;
+  document.getElementById('injNumber').value = entry.injectionNumber!=null ? entry.injectionNumber : '';
+  document.getElementById('injDose').value = entry.dose || '';
+  document.getElementById('injWeight').value = entry.weight!=null ? entry.weight : '';
+  document.getElementById('injCycleDay').value = entry.cycleDay!=null ? entry.cycleDay : '';
+  document.getElementById('injStrength').value = entry.strengthSessions!=null ? entry.strengthSessions : '';
+  document.getElementById('injNotes').value = entry.notes || '';
+  document.getElementById('injStatus').textContent = '';
+  setInjDidState(!entry.skipped);
+  document.getElementById('injModalBg').classList.add('active');
+}
+
+document.getElementById('saveInjBtn').onclick = async ()=>{
+  const date = document.getElementById('injDate').value;
+  const statusEl = document.getElementById('injStatus');
+  if(!date){ statusEl.textContent = 'בחרי תאריך.'; return; }
+  const btn = document.getElementById('saveInjBtn');
+  btn.disabled = true; btn.textContent = 'שומרת...';
+  try{
+    currentInjection.date = date;
+    if(!currentInjection.skipped){
+      const numVal = document.getElementById('injNumber').value.trim();
+      currentInjection.injectionNumber = numVal ? parseInt(numVal) : null;
+      currentInjection.dose = document.getElementById('injDose').value.trim() || null;
+    } else {
+      currentInjection.injectionNumber = null;
+      currentInjection.dose = null;
+    }
+    const weightVal = document.getElementById('injWeight').value.trim();
+    currentInjection.weight = weightVal ? parseFloat(weightVal) : null;
+    const cycleDayVal = document.getElementById('injCycleDay').value.trim();
+    currentInjection.cycleDay = cycleDayVal ? parseInt(cycleDayVal) : null;
+    const strengthVal = document.getElementById('injStrength').value.trim();
+    currentInjection.strengthSessions = strengthVal ? parseInt(strengthVal) : null;
+    currentInjection.notes = document.getElementById('injNotes').value.trim();
+
+    const wasEditing = injModalEditing;
+    const origDate = currentInjection.__originalDate;
+    const origId = currentInjection.__originalId;
+    delete currentInjection.__originalDate;
+    delete currentInjection.__originalId;
+
+    await saveInjectionEntry(currentInjection);
+    if(wasEditing && origDate !== currentInjection.date){
+      await deleteInjectionEntry(origDate, origId);
+    }
+    document.getElementById('injModalBg').classList.remove('active');
+    renderInjections();
+  }catch(e){
+    statusEl.textContent = 'שגיאה בשמירה: ' + (e.message||e);
+  }
+  btn.disabled = false; btn.textContent = 'שמירה';
+};
+
+const INJECTION_SEED = [{"date": "2026-01-15", "injectionNumber": null, "dose": null, "skipped": true, "weight": 83.25, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-01-20", "injectionNumber": 1, "dose": "1.25 מ\"ג", "skipped": false, "weight": null, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-01-27", "injectionNumber": 2, "dose": "2.5 מ\"ג", "skipped": false, "weight": 82.85, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-02-03", "injectionNumber": 3, "dose": "2.5 מ\"ג", "skipped": false, "weight": 82.45, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-02-10", "injectionNumber": 4, "dose": "2.5 מ\"ג", "skipped": false, "weight": 80.35, "notes": "יום 1 מחזור", "cycleDay": 1, "strengthSessions": null}, {"date": "2026-02-17", "injectionNumber": 5, "dose": "5 מ\"ג", "skipped": false, "weight": 79.8, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-02-24", "injectionNumber": 6, "dose": "5 מ\"ג", "skipped": false, "weight": 78.2, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-03-03", "injectionNumber": 7, "dose": "5 מ\"ג", "skipped": false, "weight": 76.45, "notes": "מדדתי ב-5.3", "cycleDay": null, "strengthSessions": null}, {"date": "2026-03-10", "injectionNumber": 8, "dose": "5 מ\"ג", "skipped": false, "weight": 75.75, "notes": "יום 1 מחזור", "cycleDay": 1, "strengthSessions": null}, {"date": "2026-03-17", "injectionNumber": 9, "dose": "5 מ\"ג", "skipped": false, "weight": 74.35, "notes": "מדדתי ב-18.3", "cycleDay": null, "strengthSessions": null}, {"date": "2026-03-24", "injectionNumber": 10, "dose": "5 מ\"ג", "skipped": false, "weight": 73.15, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-03-31", "injectionNumber": 11, "dose": "5 מ\"ג", "skipped": false, "weight": 71.95, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-04-07", "injectionNumber": 12, "dose": "5 מ\"ג", "skipped": false, "weight": 72.2, "notes": "אחרי טיול פסח + יום 1 מחזור", "cycleDay": 1, "strengthSessions": null}, {"date": "2026-04-14", "injectionNumber": 13, "dose": "5 מ\"ג", "skipped": false, "weight": 70.8, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-04-23", "injectionNumber": 14, "dose": "5 מ\"ג", "skipped": false, "weight": 69.6, "notes": "הזרקתי בחמישי (בגלל יום העצמאות); מדדתי ב-21.3", "cycleDay": null, "strengthSessions": null}, {"date": "2026-04-28", "injectionNumber": 15, "dose": "5 מ\"ג", "skipped": false, "weight": 69.75, "notes": "אחרי 2 אירועי יום עצמאות; 1 אימון כח", "cycleDay": null, "strengthSessions": 1}, {"date": "2026-05-05", "injectionNumber": 16, "dose": "5 מ\"ג", "skipped": false, "weight": 68.6, "notes": "יום 3 מחזור", "cycleDay": 3, "strengthSessions": null}, {"date": "2026-05-12", "injectionNumber": 17, "dose": "5 מ\"ג", "skipped": false, "weight": 67.4, "notes": "1 אימון כח", "cycleDay": null, "strengthSessions": 1}, {"date": "2026-05-19", "injectionNumber": 18, "dose": "5 מ\"ג", "skipped": false, "weight": 66.85, "notes": "2 אימוני כח", "cycleDay": null, "strengthSessions": 2}, {"date": "2026-05-26", "injectionNumber": 19, "dose": "5 מ\"ג", "skipped": false, "weight": 66.85, "notes": "2 אימוני כח + שבועות", "cycleDay": null, "strengthSessions": 2}, {"date": "2026-06-02", "injectionNumber": 20, "dose": "5 מ\"ג", "skipped": false, "weight": 66.0, "notes": "1 אימון כח + אחרי מסיבת רווקות + יום 4 למחזור", "cycleDay": 4, "strengthSessions": 1}, {"date": "2026-06-09", "injectionNumber": 21, "dose": "5.33 מ\"ג", "skipped": false, "weight": 65.4, "notes": "1 אימון כח + חולי (אכילה מועטת) | הזרקתי 5.33 מ\"ג (במקום 5) כדי לבדוק איך מרגישה עם עלייה קטנה", "cycleDay": null, "strengthSessions": 1}, {"date": "2026-06-16", "injectionNumber": null, "dose": null, "skipped": true, "weight": 64.4, "notes": "אחרי חתונה ולפני יום הולדת+טיסה - לכן לא הזרקתי הפעם, דילגתי שבוע", "cycleDay": null, "strengthSessions": null}, {"date": "2026-06-24", "injectionNumber": 22, "dose": "5 מ\"ג", "skipped": false, "weight": 66.5, "notes": "אחרי פריז + ללא הזרקה + יומיים לפני מחזור", "cycleDay": null, "strengthSessions": null}, {"date": "2026-07-01", "injectionNumber": 23, "dose": "5 מ\"ג", "skipped": false, "weight": 65.2, "notes": "יום 5 של מחזור + 1 אימון כח", "cycleDay": 5, "strengthSessions": 1}, {"date": "2026-07-08", "injectionNumber": 24, "dose": "6 מ\"ג", "skipped": false, "weight": 65.05, "notes": "ביוץ + 1 אימון כח +", "cycleDay": null, "strengthSessions": 1}, {"date": "2026-07-15", "injectionNumber": 25, "dose": "6 מ\"ג", "skipped": false, "weight": 63.65, "notes": "", "cycleDay": null, "strengthSessions": null}, {"date": "2026-07-21", "injectionNumber": 26, "dose": "6 מ\"ג", "skipped": false, "weight": 62.35, "notes": "יום 1 של מחזור", "cycleDay": 1, "strengthSessions": null}];
+
+async function importInjectionHistory(){
+  const existing = await getAllInjectionsRaw();
+  const byId = {};
+  existing.forEach(e=> byId[e.id]=e);
+  for(const r of INJECTION_SEED){
+    byId['seed-'+r.date] = {
+      id: 'seed-'+r.date,
+      date: r.date, injectionNumber: r.injectionNumber, dose: r.dose,
+      skipped: r.skipped, weight: r.weight, notes: r.notes, cycleDay: r.cycleDay!=null ? r.cycleDay : null
+    };
+  }
+  await saveAllInjectionsRaw(Object.values(byId));
+}
+async function seedInjectionHistory(){
+  const existing = await listInjections();
+  if(existing.length > 0) return;
+  await importInjectionHistory();
+}
+
+async function reconcileSeedCorrections(){
+  const FLAG_KEY = 'seedDoseFixV2';
+  try{
+    const flag = await window.storage.get(FLAG_KEY, false);
+    if(flag && flag.value === 'done') return;
+  }catch(e){}
+  const existing = await getAllInjectionsRaw();
+  const byId = {};
+  existing.forEach(e=> byId[e.id]=e);
+  let changed = false;
+  for(const r of INJECTION_SEED){
+    const id = 'seed-'+r.date;
+    const old = byId[id];
+    if(!old) continue; // only correct rows that were already imported
+    const fixed = {
+      ...old,
+      dose: r.dose,
+      strengthSessions: r.strengthSessions!=null ? r.strengthSessions : (old.strengthSessions!=null?old.strengthSessions:null),
+      cycleDay: old.cycleDay!=null ? old.cycleDay : (r.cycleDay!=null ? r.cycleDay : null)
+    };
+    if(JSON.stringify(old)!==JSON.stringify(fixed)){ byId[id]=fixed; changed = true; }
+  }
+  if(changed) await saveAllInjectionsRaw(Object.values(byId));
+  try{ await window.storage.set(FLAG_KEY, 'done', false); }catch(e){}
+}
+
+async function storageRetry(fn, attempts=3, delay=1000){
+  let lastErr;
+  for(let i=0;i<attempts;i++){
+    try{ return await fn(); }
+    catch(e){ lastErr = e; if(i<attempts-1) await new Promise(r=>setTimeout(r, delay*(i+1))); }
+  }
+  throw lastErr;
+}
+
+document.getElementById('importHistBtn').onclick = async ()=>{
+  const btn = document.getElementById('importHistBtn');
+  const statusEl = document.getElementById('importHistStatus');
+  btn.disabled = true;
+  statusEl.textContent = 'מייבאת...';
+  try{
+    await storageRetry(()=>importInjectionHistory());
+    statusEl.textContent = 'יובאו/עודכנו ' + INJECTION_SEED.length + ' רשומות מהקובץ.';
+    renderInjections();
+  }catch(e){
+    statusEl.textContent = 'שגיאה בייבוא (' + (e.message||e) + '). אם זה חוזר - טעני מחדש את העמוד (לא רק תלחצי שוב) ואז ננסה פעם אחת.';
+  }
+  btn.disabled = false;
+};
+
+// seed default presets once
+async function seedDefaultPresets(){
+  const existing = await getPresets();
+  if(existing.length > 0) return;
+  await setPresets([
+    {keyword:'טונה ריו', note:'קופסת טונה Rio Mare בשמן זית, 80 גרם (לפי הערך לכל הקופסה)', calories:170, protein:19.2},
+    {keyword:'קפה', note:'קפה עם רבע כוס (כ-60 מ"ל) חלב שיבולת שועל OATLY בריסטה', calories:37, protein:0.7}
+  ]);
+}
+
+// init
+seedDefaultPresets();
+seedInjectionHistory();
+reconcileSeedCorrections().then(renderInjections);
+renderToday();
+
+document.getElementById('exportAllBtn').onclick = async ()=>{
+  const out = document.getElementById('exportAllResult');
+  out.value = 'אוספת נתונים...';
+  try{
+    const entries = await listAllEntries();
+    const injections = await getAllInjectionsRaw();
+    const presets = await getPresets();
+    const dump = { entries, injections, presets, exportedAt: new Date().toISOString() };
+    out.value = JSON.stringify(dump);
+  }catch(e){
+    out.value = 'שגיאה בייצוא: ' + (e.message||e);
+  }
+};
+
+document.getElementById('testStorageBtn').onclick = async ()=>{
+  const out = document.getElementById('testStorageResult');
+  out.value = 'קוראת...';
+  try{
+    const lines = [];
+    // write+read sanity check
+    const testKey = 'diag-'+Date.now();
+    await window.storage.set(testKey, 'hello-'+Date.now(), false);
+    const readBack = await window.storage.get(testKey, false);
+    lines.push('כתיבה/קריאה מיידית (אישית): ' + (readBack && readBack.value ? 'תקין - ' + readBack.value : 'נכשל'));
+    await window.storage.delete(testKey, false);
+
+    // raw counts from shared data
+    const foodList = await window.storage.list('entries:', true);
+    lines.push('מספר רשומות יומן אכילה (shared): ' + (foodList && foodList.keys ? foodList.keys.length : 'שגיאה/0'));
+
+    let injRaw = null;
+    try{ injRaw = await window.storage.get('injections', true); }catch(e){ injRaw = null; }
+    lines.push('מפתח injections (shared) קיים: ' + (injRaw && injRaw.value ? 'כן, אורך ' + injRaw.value.length + ' תווים' : 'לא נמצא'));
+    if(injRaw && injRaw.value){
+      try{
+        const arr = JSON.parse(injRaw.value);
+        lines.push('מספר רשומות זריקות/משקל בפועל: ' + arr.length);
+      }catch(e){ lines.push('לא הצלחתי לפרסר את injections: ' + e.message); }
+    }
+
+    let presetsRaw = null;
+    try{ presetsRaw = await window.storage.get('presets', false); }catch(e){ presetsRaw = null; }
+    lines.push('מפתח presets (personal) קיים: ' + (presetsRaw && presetsRaw.value ? 'כן' : 'לא נמצא'));
+
+    out.value = lines.join('\n');
+  }catch(e){
+    out.value = 'שגיאה כללית בבדיקה: ' + (e.message||e);
+  }
+};
+
+document.getElementById('testApiBtn').onclick = async ()=>{
+  const out = document.getElementById('testApiResult');
+  out.value = 'שולחת בקשה דרך ה-Netlify Function...';
+  try{
+    const resp = await fetch('/.netlify/functions/claude-proxy', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 50, messages:[{role:'user', content:'תעני במילה אחת: תקין'}] })
+    });
+    const text = await resp.text();
+    out.value = 'status: ' + resp.status + '\n\n' + text;
+  }catch(e){
+    out.value = 'שגיאה בשליחה עצמה (fetch נכשל): ' + (e && e.message ? e.message : String(e));
+  }
+};
+
+// ---------- one-time migration of data exported from the Claude-hosted version ----------
+const MIGRATED_ENTRIES = [{"id": "e17850762230106mwi0", "date": "2026-07-26", "time": "17:30", "slot": "אחה\"צ", "description": "קציצת עוף", "notes": "", "calories": 130, "protein": 16, "breakdown": [{"item": "קציצת עוף (כ-120 גרם)", "calories": 180, "protein": 18}]}, {"id": "e178507569530094eqk", "date": "2026-07-26", "time": "16:50", "slot": "אחה\"צ", "description": "מלפפון אחד בינוני פרוס לרצועות (כ-4–5 רצועות), כשתי כפות גבינת קוטג' 5%.", "notes": "", "calories": 65, "protein": 6, "breakdown": [{"item": "מלפפון בינוני (כ-200 גרם)", "calories": 30, "protein": 1}, {"item": "גבינת קוטג' 5% (כ-60 גרם)", "calories": 35, "protein": 4}]}, {"id": "e1785064128959z1kge", "date": "2026-07-26", "time": "14:08", "slot": "צהריים", "description": "3 קניידלך, חצי כוס ציר עוף צלול, 2 חתיכות קטנות כרוב וגזר", "notes": "", "calories": 285, "protein": 10, "breakdown": [{"item": "3 קניידלך", "calories": 240, "protein": 8}, {"item": "חצי כוס ציר עוף צלול", "calories": 20, "protein": 2}, {"item": "2 חתיכות קטנות כרוב וגזר", "calories": 25, "protein": 1}]}, {"id": "e17850595086713xju1", "date": "2026-07-26", "time": "12:51", "slot": "צהריים", "description": "טונה ריו,\n\nכפית וחצי של מיונז רגיל,\n\nרבע בצל סגול קצוץ,\n\nחצי מלפפון,\n\nחמש עגבניות שרי,\n\nחצי כפית שמן זית,\n\nמלח גס,\nופרוסת לחם", "calories": 310, "protein": 17, "breakdown": [{"item": "טונה ריו (80 גרם)", "calories": 110, "protein": 13}, {"item": "כפית וחצי מיונז רגיל (כ-21 גרם)", "calories": 60, "protein": 0}, {"item": "רבע בצל סגול (כ-30 גרם)", "calories": 12, "protein": 0}, {"item": "חצי מלפפון (כ-75 גרם)", "calories": 11, "protein": 0}, {"item": "חמש עגבניות שרי (כ-85 גרם)", "calories": 15, "protein": 1}, {"item": "חצי כפית שמן זית (כ-2.5 גרם)", "calories": 22, "protein": 0}, {"item": "מלח גס", "calories": 0, "protein": 0}, {"item": "פרוסת לחם (כ-30 גרם)", "calories": 80, "protein": 3}]}, {"id": "e1785061989696ns32p", "date": "2026-07-26", "time": "09:00", "slot": "בוקר", "description": "קפה", "calories": 37, "protein": 1, "breakdown": [{"item": "קפה עם חלב שיבולת שועל OATLY בריסטה (60 מ\"ל)", "calories": 37, "protein": 1}]}, {"id": "e1785061380697yf3rr", "date": "2026-07-25", "time": "23:59", "slot": "לילה", "description": "2 קציצות עוף", "calories": 220, "protein": 26, "breakdown": [{"item": "2 קציצות עוף", "calories": 220, "protein": 26}]}, {"id": "e1785060503455z7rd3", "date": "2026-07-25", "time": "23:00", "slot": "לילה", "description": "3/4 קולורבי", "calories": 38, "protein": 2, "breakdown": [{"item": "3/4 קולורבי (כ-135 גרם)", "calories": 38, "protein": 2}]}, {"id": "e178506055286595oec", "date": "2026-07-25", "time": "19:00", "slot": "ערב", "description": "מלפפון, 7 עגבניות שרי, 2 כפות טחינה גולמית", "calories": 185, "protein": 6, "breakdown": [{"item": "מלפפון", "calories": 16, "protein": 1}, {"item": "7 עגבניות שרי", "calories": 35, "protein": 1}, {"item": "2 כפות טחינה גולמית", "calories": 134, "protein": 4}]}, {"id": "e1785060631766ge6i8", "date": "2026-07-25", "time": "19:00", "slot": "ערב", "description": "כ-120 גרם חזה עוף מוקפץ, כ-100 גרם ברוקולי מוקפץ, כ-80 גרם שעועית ירוקה מוקפצת", "calories": 280, "protein": 38, "breakdown": [{"item": "חזה עוף מוקפץ (120 גרם)", "calories": 185, "protein": 31}, {"item": "ברוקולי מוקפץ (100 גרם)", "calories": 55, "protein": 4}, {"item": "שעועית ירוקה מוקפצת (80 גרם)", "calories": 40, "protein": 3}]}, {"id": "e1785061583946afsnj", "date": "2026-07-25", "time": "17:00", "slot": "אחה", "description": "כוס שרדונה", "calories": 122, "protein": 0, "breakdown": [{"item": "כוס שרדונה (148 מ\"ל)", "calories": 122, "protein": 0}]}, {"id": "e1785061857111a7zzn", "date": "2026-07-25", "time": "13:30", "slot": "צהריים", "description": "חצי כוס מרק עוף צח + 3 קניידלך + 3 קציצות עוף + 3 כפות של תבשיל חצילים ועגבניות", "calories": 420, "protein": 34, "breakdown": [{"item": "חצי כוס מרק עוף צח", "calories": 20, "protein": 2}, {"item": "3 קניידלך", "calories": 180, "protein": 5}, {"item": "3 קציצות עוף", "calories": 165, "protein": 24}, {"item": "3 כפות תבשיל חצילים ועגבניות", "calories": 55, "protein": 3}]}, {"id": "e1785061310114y9dh3", "date": "2026-07-25", "time": "12:00", "slot": "בוקר", "description": "קפה", "calories": 37, "protein": 1, "breakdown": [{"item": "קפה עם חלב שיבולת שועל OATLY בריסטה (60 מ\"ל)", "calories": 37, "protein": 1}]}, {"id": "e1785060915269nm9vs", "date": "2026-07-25", "time": "10:00", "slot": "בוקר", "description": "קפה", "calories": 37, "protein": 1, "breakdown": [{"item": "קפה עם חלב שיבולת שועל OATLY בריסטה (60 מ\"ל)", "calories": 37, "protein": 1}]}];
+const MIGRATED_INJECTIONS = [{"id": "seed-2026-01-15", "date": "2026-01-15", "injectionNumber": null, "dose": null, "skipped": true, "weight": 83.25, "notes": "משקל התחלתי", "cycleDay": null, "strengthSessions": null}, {"id": "seed-2026-01-20", "date": "2026-01-20", "injectionNumber": 1, "dose": "1.25 מ\"ג", "skipped": false, "weight": null, "notes": "מינון הסתגלות", "cycleDay": null, "strengthSessions": null}, {"id": "seed-2026-01-27", "date": "2026-01-27", "injectionNumber": 2, "dose": "2.5 מ\"ג", "skipped": false, "weight": 82.85, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-02-03", "date": "2026-02-03", "injectionNumber": 3, "dose": "2.5 מ\"ג", "skipped": false, "weight": 82.45, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-02-10", "date": "2026-02-10", "injectionNumber": 4, "dose": "2.5 מ\"ג", "skipped": false, "weight": 80.35, "notes": "", "strengthSessions": null, "cycleDay": 1}, {"id": "seed-2026-02-17", "date": "2026-02-17", "injectionNumber": 5, "dose": "5 מ\"ג", "skipped": false, "weight": 79.8, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-02-24", "date": "2026-02-24", "injectionNumber": 6, "dose": "5 מ\"ג", "skipped": false, "weight": 78.2, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-03-03", "date": "2026-03-03", "injectionNumber": 7, "dose": "5 מ\"ג", "skipped": false, "weight": 76.45, "notes": "מדדתי ב-5.3", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-03-10", "date": "2026-03-10", "injectionNumber": 8, "dose": "5 מ\"ג", "skipped": false, "weight": 75.75, "notes": "", "strengthSessions": null, "cycleDay": 1}, {"id": "seed-2026-03-17", "date": "2026-03-17", "injectionNumber": 9, "dose": "5 מ\"ג", "skipped": false, "weight": 74.35, "notes": "מדדתי ב-18.3", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-03-24", "date": "2026-03-24", "injectionNumber": 10, "dose": "5 מ\"ג", "skipped": false, "weight": 73.15, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-03-31", "date": "2026-03-31", "injectionNumber": 11, "dose": "5 מ\"ג", "skipped": false, "weight": 71.95, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-04-07", "date": "2026-04-07", "injectionNumber": 12, "dose": "5 מ\"ג", "skipped": false, "weight": 72.2, "notes": "אחרי טיול פסח", "strengthSessions": null, "cycleDay": 1}, {"id": "seed-2026-04-14", "date": "2026-04-14", "injectionNumber": 13, "dose": "5 מ\"ג", "skipped": false, "weight": 70.8, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-04-23", "date": "2026-04-23", "injectionNumber": 14, "dose": "5 מ\"ג", "skipped": false, "weight": 69.6, "notes": "הזרקתי בחמישי (בגלל יום העצמאות); מדדתי ב-21.3", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-04-28", "date": "2026-04-28", "injectionNumber": 15, "dose": "5 מ\"ג", "skipped": false, "weight": 69.75, "notes": "אחרי 2 אירועי יום עצמאות", "strengthSessions": 1, "cycleDay": null}, {"id": "seed-2026-05-05", "date": "2026-05-05", "injectionNumber": 16, "dose": "5 מ\"ג", "skipped": false, "weight": 68.6, "notes": "", "strengthSessions": null, "cycleDay": 3}, {"id": "seed-2026-05-12", "date": "2026-05-12", "injectionNumber": 17, "dose": "5 מ\"ג", "skipped": false, "weight": 67.4, "notes": "", "strengthSessions": 1, "cycleDay": null}, {"id": "seed-2026-05-19", "date": "2026-05-19", "injectionNumber": 18, "dose": "5 מ\"ג", "skipped": false, "weight": 66.85, "notes": "", "strengthSessions": 2, "cycleDay": null}, {"id": "seed-2026-05-26", "date": "2026-05-26", "injectionNumber": 19, "dose": "5 מ\"ג", "skipped": false, "weight": 66.85, "notes": "אחרי שבועות", "strengthSessions": 2, "cycleDay": null}, {"id": "seed-2026-06-02", "date": "2026-06-02", "injectionNumber": 20, "dose": "5 מ\"ג", "skipped": false, "weight": 66, "notes": "אחרי מסיבת רווקות", "strengthSessions": 1, "cycleDay": 4}, {"id": "seed-2026-06-09", "date": "2026-06-09", "injectionNumber": 21, "dose": "5.33 מ\"ג", "skipped": false, "weight": 65.4, "notes": "אחרי חולי (אכילה מועטת) | הזרקתי 5.33 מ\"ג (במקום 5) כדי לבדוק איך מרגישה עם עלייה קטנה", "strengthSessions": 1, "cycleDay": null}, {"id": "seed-2026-06-16", "date": "2026-06-16", "injectionNumber": null, "dose": null, "skipped": true, "weight": 64.4, "notes": "אחרי חתונה ולפני יום הולדת+טיסה - לכן לא הזרקתי הפעם, דילגתי שבוע", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-06-24", "date": "2026-06-24", "injectionNumber": 22, "dose": "5 מ\"ג", "skipped": false, "weight": 66.5, "notes": "אחרי פריז + ללא הזרקה", "strengthSessions": null, "cycleDay": 26}, {"id": "seed-2026-07-01", "date": "2026-07-01", "injectionNumber": 23, "dose": "5 מ\"ג", "skipped": false, "weight": 65.2, "notes": "", "strengthSessions": 1, "cycleDay": 5}, {"id": "seed-2026-07-08", "date": "2026-07-08", "injectionNumber": 24, "dose": "6 מ\"ג", "skipped": false, "weight": 65.05, "notes": "", "strengthSessions": 1, "cycleDay": 14}, {"id": "seed-2026-07-15", "date": "2026-07-15", "injectionNumber": 25, "dose": "6 מ\"ג", "skipped": false, "weight": 63.65, "notes": "", "strengthSessions": null, "cycleDay": null}, {"id": "seed-2026-07-21", "date": "2026-07-21", "injectionNumber": null, "dose": null, "skipped": true, "weight": 62.35, "notes": "דילגתי עקב המחזור + חולי + ארוחת אומקסה", "strengthSessions": null, "cycleDay": 1}];
+const MIGRATED_PRESETS = [{"keyword": "טונה ריו", "note": "קופסת טונה Rio Mare בשמן זית, 80 גרם (לפי הערך לכל הקופסה)", "calories": 110, "protein": 13}, {"keyword": "קפה", "note": "קפה עם רבע כוס (כ-60 מ\"ל) חלב שיבולת שועל OATLY בריסטה", "calories": 37, "protein": 0.7}];
+
+async function runMigrationIfNeeded(){
+  try{
+    const existingEntries = await window.storage.list('entries:', true);
+    if(!existingEntries || !existingEntries.keys || existingEntries.keys.length === 0){
+      for(const e of MIGRATED_ENTRIES){
+        await window.storage.set('entries:'+e.date+':'+e.id, JSON.stringify(e), true);
+      }
+    }
+    const existingInj = await window.storage.get('injections', true).catch(()=>null);
+    if(!existingInj || !existingInj.value){
+      await window.storage.set('injections', JSON.stringify(MIGRATED_INJECTIONS), true);
+    }
+    const existingPresets = await window.storage.get('presets', false).catch(()=>null);
+    if(!existingPresets || !existingPresets.value){
+      await window.storage.set('presets', JSON.stringify(MIGRATED_PRESETS), false);
+    }
+  }catch(e){
+    console.error('Migration error', e);
+  }
+  renderToday();
+  renderHistory();
+}
+runMigrationIfNeeded();
+</script>
+</body>
+</html>
