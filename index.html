@@ -273,6 +273,14 @@
       <div class="field-lbl">שעת ארוחה</div>
       <div class="slot-pick" id="slotPick"></div>
 
+      <div class="field-lbl">סולם רעב (לפני האוכל)</div>
+      <div class="slot-pick" id="hungerPick"></div>
+      <input type="text" id="hungerNote" placeholder="הערה על הרעב (אופציונלי)" style="margin-top:8px;">
+
+      <div class="field-lbl">סולם שובע (אחרי האוכל)</div>
+      <div class="slot-pick" id="satietyPick"></div>
+      <input type="text" id="satietyNote" placeholder="הערה על השובע (אופציונלי)" style="margin-top:8px;">
+
       <div class="field-lbl">תמונה</div>
       <div class="photo-input-row">
         <label class="photo-btn">📷 צלמי תמונה
@@ -687,8 +695,49 @@ async function renderToday(){
   attachDelHandlers();
 }
 
+// ---------- hunger / satiety scales ----------
+const HUNGER_SCALE = [
+  {v:1, label:'מורעבת'},
+  {v:2, label:'רעבה פיזית'},
+  {v:3, label:'לא רעבה פיזית אבל אוכלת'}
+];
+const SATIETY_SCALE = [
+  {v:4, label:'חסר לי'},
+  {v:5, label:'שבעה בול'},
+  {v:6, label:'מעט כבדה'},
+  {v:7, label:'מפוצצת'}
+];
+function scaleLabel(scaleDef, v){
+  const f = scaleDef.find(s=>s.v===v);
+  return f ? (f.v + ' - ' + f.label) : '';
+}
+function hungerSatietyText(e){
+  const parts = [];
+  if(e.hunger!=null) parts.push('רעב: ' + scaleLabel(HUNGER_SCALE, e.hunger) + (e.hungerNote ? ' (' + e.hungerNote + ')' : ''));
+  else if(e.hungerNote) parts.push('רעב: ' + e.hungerNote);
+  if(e.satiety!=null) parts.push('שובע: ' + scaleLabel(SATIETY_SCALE, e.satiety) + (e.satietyNote ? ' (' + e.satietyNote + ')' : ''));
+  else if(e.satietyNote) parts.push('שובע: ' + e.satietyNote);
+  return parts.join(' · ');
+}
+function renderScalePicker(containerId, scaleDef, selectedVal, onPick){
+  const el = document.getElementById(containerId);
+  el.innerHTML = scaleDef.map(s=>
+    `<div class="slot-chip ${s.v===selectedVal?'sel':''}" data-v="${s.v}">${s.v} - ${s.label}</div>`
+  ).join('');
+  el.querySelectorAll('.slot-chip').forEach(c=>{
+    c.onclick = ()=>{
+      const v = Number(c.dataset.v);
+      const wasSel = c.classList.contains('sel');
+      el.querySelectorAll('.slot-chip').forEach(x=>x.classList.remove('sel'));
+      if(wasSel){ onPick(null); }        // clicking the selected chip again clears it
+      else { c.classList.add('sel'); onPick(v); }
+    };
+  });
+}
+
 function entryCardHtml(e){
   return `<div class="entry-card">
+
     ${e.thumb ? `<img src="${e.thumb}">` : '<div style="width:64px;height:64px;border-radius:10px;background:#e6dfcb;flex-shrink:0;"></div>'}
     <div class="entry-body">
       <div class="entry-top">
@@ -697,6 +746,7 @@ function entryCardHtml(e){
       </div>
       <div class="entry-desc">${e.description}</div>
       ${e.notes ? `<div class="entry-desc" style="color:var(--ink-soft); font-style:italic; font-size:12.5px;">📝 ${e.notes}</div>` : ''}
+      ${hungerSatietyText(e) ? `<div class="entry-desc" style="color:var(--sage-deep); font-size:12px;">${hungerSatietyText(e)}</div>` : ''}
       <div class="entry-nums"><span><b>${smartRound(e.calories)}</b> קל'</span><span><b>${smartRound(e.protein)}</b>ג' חלבון</span></div>
       <div>
         <button class="entry-del" data-id="${e.id}" data-action="edit">עריכה</button>
@@ -756,6 +806,13 @@ function openEditEntry(entry){
   document.getElementById('descStatus').textContent='';
   document.getElementById('retryAnalyzeBtn').style.display='none';
   document.getElementById('calcStatus').textContent='';
+
+  currentEntry.hunger = entry.hunger!=null ? entry.hunger : null;
+  currentEntry.satiety = entry.satiety!=null ? entry.satiety : null;
+  document.getElementById('hungerNote').value = entry.hungerNote || '';
+  document.getElementById('satietyNote').value = entry.satietyNote || '';
+  renderScalePicker('hungerPick', HUNGER_SCALE, currentEntry.hunger, v=>{ currentEntry.hunger = v; });
+  renderScalePicker('satietyPick', SATIETY_SCALE, currentEntry.satiety, v=>{ currentEntry.satiety = v; });
 
   document.getElementById('resCal').value = smartRound(entry.calories||0);
   document.getElementById('resProt').value = smartRound(entry.protein||0);
@@ -842,6 +899,12 @@ function resetModal(){
   document.getElementById('entryDate').value = todayStr(now);
   document.getElementById('entryTime').value = currentEntry.time;
   renderSlotPicker();
+  currentEntry.hunger = null;
+  currentEntry.satiety = null;
+  document.getElementById('hungerNote').value = '';
+  document.getElementById('satietyNote').value = '';
+  renderScalePicker('hungerPick', HUNGER_SCALE, null, v=>{ currentEntry.hunger = v; });
+  renderScalePicker('satietyPick', SATIETY_SCALE, null, v=>{ currentEntry.satiety = v; });
   getPresets().then(p=> cachedPresets = p).catch(()=>{});
 }
 
@@ -1054,6 +1117,8 @@ document.getElementById('saveBtn').onclick = async ()=>{
     currentEntry.calories = parseFloat(document.getElementById('resCal').value)||0;
     currentEntry.protein = parseFloat(document.getElementById('resProt').value)||0;
     currentEntry.breakdown = collectBreakdownFromUI();
+    currentEntry.hungerNote = document.getElementById('hungerNote').value.trim();
+    currentEntry.satietyNote = document.getElementById('satietyNote').value.trim();
     const wasEditing = currentEntry.__isEditing;
     const originalDate = currentEntry.__editingOriginalDate;
     const originalId = currentEntry.__editingOriginalId;
