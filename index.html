@@ -916,7 +916,6 @@ async function handlePhotoFile(file){
   let mainUrl;
   try{
     mainUrl = await resizeImage(file, 500);
-    currentEntry.imageBase64 = mainUrl.split(',')[1];
     document.getElementById('previewImg').src = mainUrl;
     document.getElementById('previewWrap').style.display='block';
     currentEntry.thumb = mainUrl;
@@ -926,42 +925,17 @@ async function handlePhotoFile(file){
   }
   document.getElementById('analyzeStatus').textContent = '';
 
-  // Move straight to manual description entry - never block on AI analysis.
+  // The photo is kept only as a visual record in the journal.
+  // No AI analysis of the image - the description is always written manually.
   document.getElementById('descText').value = '';
-  document.getElementById('descText').placeholder = 'מנתחת את התמונה ברקע... אפשר להתחיל לכתוב כאן בכל רגע';
+  document.getElementById('descText').placeholder = 'תיאור המנה (כתבי ידנית)';
   document.getElementById('descStatus').textContent = '';
+  document.getElementById('retryAnalyzeBtn').style.display='none';
   document.getElementById('step-confirm').style.display='block';
 
-  // shrink a lighter thumbnail for storage, off the critical path (doesn't block analysis)
+  // shrink a lighter thumbnail for storage
   resizeImage(file, 220).then(t=>{ currentEntry.thumb = t; }).catch(()=>{});
-
-  try{
-    const desc = await analyzeImage(currentEntry.imageBase64);
-    // only autofill if the user hasn't already started typing
-    if(!document.getElementById('descText').value.trim()){
-      document.getElementById('descText').value = desc;
-    }
-    document.getElementById('descText').placeholder = '';
-    document.getElementById('retryAnalyzeBtn').style.display='none';
-  }catch(e){
-    document.getElementById('descText').placeholder = 'תיאור המנה (כתבי ידנית)';
-    document.getElementById('descStatus').textContent = 'ניתוח אוטומטי של התמונה לא הצליח (' + (e.message||e) + '). כתבי את התיאור ידנית, או נסי שוב.';
-    document.getElementById('retryAnalyzeBtn').style.display='block';
-  }
 }
-
-document.getElementById('retryAnalyzeBtn').onclick = async ()=>{
-  if(!currentEntry.imageBase64) return;
-  document.getElementById('descStatus').textContent = 'מנתחת שוב...';
-  try{
-    const desc = await analyzeImage(currentEntry.imageBase64);
-    document.getElementById('descText').value = desc;
-    document.getElementById('descStatus').textContent = '';
-    document.getElementById('retryAnalyzeBtn').style.display='none';
-  }catch(e){
-    document.getElementById('descStatus').textContent = 'עדיין נכשל (' + (e.message||e) + ').';
-  }
-};
 
 document.getElementById('photoInputCamera').onchange = (ev)=> handlePhotoFile(ev.target.files[0]);
 document.getElementById('photoInputGallery').onchange = (ev)=> handlePhotoFile(ev.target.files[0]);
@@ -980,20 +954,6 @@ document.getElementById('noPhotoBtn').onclick = ()=>{
   document.getElementById('step-confirm').style.display='block';
   document.getElementById('descText').focus();
 };
-
-async function analyzeImage(base64){
-  const messages = [{
-    role:'user',
-    content:[
-      {type:'image', source:{type:'base64', media_type:'image/jpeg', data:base64}},
-      {type:'text', text:'זו תמונה של מנת אוכל. תני תיאור קצר בעברית של המרכיבים והכמות המשוערת שלהם (לדוגמה: "כוס אורז לבן, חצי חזה עוף בגריל, כף קארי צהוב"). אם משהו לא ברור, ציין זאת בקצרה. החזירי רק את התיאור בעברית, בלי הקדמות ובלי JSON.'}
-    ]
-  }];
-  const text = await callClaude(messages);
-  const trimmed = text.trim();
-  if(!trimmed) throw new Error('empty description');
-  return trimmed;
-}
 
 function escapeAttr(s){
   return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
