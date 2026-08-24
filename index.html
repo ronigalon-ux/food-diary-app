@@ -221,6 +221,8 @@
     <input type="text" id="presetKeyword" placeholder="למשל: טונה ריו">
     <div class="field-lbl">מה זה בדיוק, כולל כמות</div>
     <input type="text" id="presetNote" placeholder="למשל: קופסת טונה Rio Mare בשמן זית, 80 גרם">
+    <div class="field-lbl">אימוג'י (אופציונלי)</div>
+    <input type="text" id="presetEmoji" placeholder="למשל: ☕️" style="text-align:center; font-size:20px;" maxlength="8">
     <div class="nums-box">
       <div class="num-card"><input type="text" id="presetCal" placeholder="קלוריות" style="text-align:center;border:none;background:transparent;width:100%;"></div>
       <div class="num-card"><input type="text" id="presetProt" placeholder="חלבון (ג')" style="text-align:center;border:none;background:transparent;width:100%;"></div>
@@ -294,11 +296,13 @@
         <img id="previewImg">
       </div>
       <div class="status-line" id="analyzeStatus"></div>
-      <button class="secondary-btn" id="noPhotoBtn">אין תמונה - כתיבה ידנית</button>
+
+      <div class="field-lbl">אימוג'י (במקום או בנוסף לתמונה)</div>
+      <input type="text" id="entryEmoji" placeholder="למשל: 🥑" style="text-align:center; font-size:22px;" maxlength="8">
     </div>
 
-    <div id="step-confirm" style="display:none">
-      <div class="field-lbl">מה בדיוק יש במנה? (ניתן לערוך)</div>
+    <div id="step-confirm">
+      <div class="field-lbl">מה בדיוק יש במנה?</div>
       <div class="status-line" id="descStatus"></div>
       <button class="secondary-btn" id="retryAnalyzeBtn" style="display:none;">ניסיון נוסף לניתוח אוטומטי</button>
       <textarea id="descText" rows="4"></textarea>
@@ -509,6 +513,7 @@ async function renderPresets(){
   else {
     el.innerHTML = list.map((p,i)=>`
       <div class="entry-card" style="align-items:center;">
+        ${p.emoji ? `<div style="font-size:30px; width:40px; text-align:center; flex-shrink:0;">${p.emoji}</div>` : ''}
         <div class="entry-body">
           <div class="entry-desc"><b>${p.keyword}</b> → ${p.note}</div>
           <div class="entry-nums"><span><b>${p.calories}</b> קל'</span><span><b>${p.protein}</b>ג' חלבון</span></div>
@@ -542,6 +547,7 @@ function startEditPreset(i, p){
   editingPresetIndex = i;
   document.getElementById('presetKeyword').value = p.keyword;
   document.getElementById('presetNote').value = p.note;
+  document.getElementById('presetEmoji').value = p.emoji || '';
   document.getElementById('presetCal').value = p.calories;
   document.getElementById('presetProt').value = p.protein;
   document.getElementById('addPresetBtn').textContent = 'עדכון קבוע';
@@ -551,6 +557,7 @@ function resetPresetForm(){
   editingPresetIndex = null;
   document.getElementById('presetKeyword').value='';
   document.getElementById('presetNote').value='';
+  document.getElementById('presetEmoji').value='';
   document.getElementById('presetCal').value='';
   document.getElementById('presetProt').value='';
   document.getElementById('presetUrl').value='';
@@ -590,14 +597,15 @@ document.getElementById('fetchUrlBtn').onclick = async ()=>{
 document.getElementById('addPresetBtn').onclick = async ()=>{
   const keyword = document.getElementById('presetKeyword').value.trim();
   const note = document.getElementById('presetNote').value.trim();
+  const emoji = document.getElementById('presetEmoji').value.trim();
   const calories = parseFloat(document.getElementById('presetCal').value);
   const protein = parseFloat(document.getElementById('presetProt').value);
   if(!keyword || !note || isNaN(calories) || isNaN(protein)) return;
   const list = await getPresets();
   if(editingPresetIndex!=null && list[editingPresetIndex]){
-    list[editingPresetIndex] = {keyword, note, calories, protein};
+    list[editingPresetIndex] = {keyword, note, emoji, calories, protein};
   } else {
-    list.push({keyword, note, calories, protein});
+    list.push({keyword, note, emoji, calories, protein});
   }
   await setPresets(list);
   cachedPresets = list;
@@ -738,7 +746,11 @@ function renderScalePicker(containerId, scaleDef, selectedVal, onPick){
 function entryCardHtml(e){
   return `<div class="entry-card">
 
-    ${e.thumb ? `<img src="${e.thumb}">` : '<div style="width:64px;height:64px;border-radius:10px;background:#e6dfcb;flex-shrink:0;"></div>'}
+    ${e.thumb
+        ? `<img src="${e.thumb}">`
+        : (e.emoji
+            ? `<div style="width:64px;height:64px;border-radius:10px;background:#e6dfcb;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:34px;">${e.emoji}</div>`
+            : '<div style="width:64px;height:64px;border-radius:10px;background:#e6dfcb;flex-shrink:0;"></div>')}
     <div class="entry-body">
       <div class="entry-top">
         <span class="slot-badge">${e.slot}</span>
@@ -809,6 +821,8 @@ function openEditEntry(entry){
 
   currentEntry.hunger = entry.hunger!=null ? entry.hunger : null;
   currentEntry.satiety = entry.satiety!=null ? entry.satiety : null;
+  currentEntry.emoji = entry.emoji || null;
+  document.getElementById('entryEmoji').value = entry.emoji || '';
   document.getElementById('hungerNote').value = entry.hungerNote || '';
   document.getElementById('satietyNote').value = entry.satietyNote || '';
   renderScalePicker('hungerPick', HUNGER_SCALE, currentEntry.hunger, v=>{ currentEntry.hunger = v; });
@@ -820,7 +834,7 @@ function openEditEntry(entry){
   document.getElementById('saveStatus').textContent='';
 
   document.getElementById('step-photo').style.display='block';
-  document.getElementById('step-confirm').style.display='none';
+  document.getElementById('step-confirm').style.display='block';
   document.getElementById('step-result').style.display='block';
 
   modalBg.classList.add('active');
@@ -878,13 +892,13 @@ function resetModal(){
   currentEntry = {id: 'e'+Date.now()+Math.random().toString(36).slice(2,7)};
   document.getElementById('modalTitle').textContent = 'תיעוד אכילה';
   document.getElementById('step-photo').style.display='block';
-  document.getElementById('step-confirm').style.display='none';
+  document.getElementById('step-confirm').style.display='block';
   document.getElementById('step-result').style.display='none';
   document.getElementById('previewWrap').style.display='none';
   document.getElementById('analyzeStatus').textContent='';
   document.getElementById('descText').value='';
   document.getElementById('notesText').value='';
-  document.getElementById('descText').placeholder='';
+  document.getElementById('descText').placeholder='תיאור המנה';
   document.getElementById('descStatus').textContent='';
   document.getElementById('retryAnalyzeBtn').style.display='none';
   document.getElementById('calcStatus').textContent='';
@@ -901,6 +915,8 @@ function resetModal(){
   renderSlotPicker();
   currentEntry.hunger = null;
   currentEntry.satiety = null;
+  currentEntry.emoji = null;
+  document.getElementById('entryEmoji').value = '';
   document.getElementById('hungerNote').value = '';
   document.getElementById('satietyNote').value = '';
   renderScalePicker('hungerPick', HUNGER_SCALE, null, v=>{ currentEntry.hunger = v; });
@@ -988,35 +1004,13 @@ async function handlePhotoFile(file){
   }
   document.getElementById('analyzeStatus').textContent = '';
 
-  // The photo is kept only as a visual record in the journal.
-  // No AI analysis of the image - the description is always written manually.
-  document.getElementById('descText').value = '';
-  document.getElementById('descText').placeholder = 'תיאור המנה (כתבי ידנית)';
-  document.getElementById('descStatus').textContent = '';
-  document.getElementById('retryAnalyzeBtn').style.display='none';
-  document.getElementById('step-confirm').style.display='block';
-
+  // The photo is kept only as a visual record in the journal - it is optional.
   // shrink a lighter thumbnail for storage
   resizeImage(file, 220).then(t=>{ currentEntry.thumb = t; }).catch(()=>{});
 }
 
 document.getElementById('photoInputCamera').onchange = (ev)=> handlePhotoFile(ev.target.files[0]);
 document.getElementById('photoInputGallery').onchange = (ev)=> handlePhotoFile(ev.target.files[0]);
-
-document.getElementById('noPhotoBtn').onclick = ()=>{
-  currentEntry.thumb = null;
-  currentEntry.imageBase64 = null;
-  document.getElementById('previewWrap').style.display='none';
-  document.getElementById('analyzeStatus').textContent='';
-  document.getElementById('descText').value='';
-  document.getElementById('descText').placeholder='תיאור המנה';
-  document.getElementById('descStatus').textContent='';
-  document.getElementById('retryAnalyzeBtn').style.display='none';
-  document.getElementById('calcStatus').textContent='';
-  document.getElementById('step-result').style.display='none';
-  document.getElementById('step-confirm').style.display='block';
-  document.getElementById('descText').focus();
-};
 
 function escapeAttr(s){
   return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
@@ -1095,11 +1089,11 @@ async function estimateNutrition(description){
   }
   const prompt = `זהו תיאור של מנת אוכל: "${description}".${knownBlock}
 
-לכל פריט בתיאור (שאינו ברשימת הערכים הידועים למעלה) - **חפשי באינטרנט** את הערך התזונתי הרשמי שלו (קלוריות וחלבון ל-100 גרם, או לפי יחידה סטנדרטית אם רלוונטי, ממקור אמין כמו טבלת ערכים תזונתיים/USDA/יצרן). אל תסתמכי על הערכה מהזיכרון בלבד - בדקי בפועל. אחר כך התאימי את הערך לכמות שמתוארת (משקל בגרם, או מספר יחידות כפול ערך ליחידה).
+לכל פריט בתיאור (שאינו ברשימת הערכים הידועים למעלה) - הערכי את הערך התזונתי שלו (קלוריות וחלבון) לפי ערכים תזונתיים סטנדרטיים ומקובלים (כמו טבלאות USDA / ערכים טיפוסיים ליצרן). התאימי את הערך לכמות שמתוארת (משקל בגרם, או מספר יחידות כפול ערך ליחידה).
 
-תני הערכה תזונתית מדויקת ככל האפשר לכל המנה, מבוססת על הערכים שמצאת בחיפוש. החזירי אך ורק JSON תקני בפורמט הבא, בלי טקסט נוסף ובלי markdown:
+תני הערכה תזונתית מדויקת ככל האפשר לכל המנה. החזירי אך ורק JSON תקני בפורמט הבא, בלי טקסט נוסף ובלי markdown:
 {"calories": number, "protein": number, "breakdown": [{"item": "string", "calories": number, "protein": number}]}`;
-  const text = await callClaudeWithSearch(prompt);
+  const text = await callClaude([{ role:'user', content: prompt }]);
   const match = text.replace(/\`\`\`json|\`\`\`/g,'').match(/\{[\s\S]*\}/);
   if(!match) throw new Error('לא התקבל JSON תקין מהתשובה');
   return JSON.parse(match[0]);
@@ -1119,6 +1113,7 @@ document.getElementById('saveBtn').onclick = async ()=>{
     currentEntry.breakdown = collectBreakdownFromUI();
     currentEntry.hungerNote = document.getElementById('hungerNote').value.trim();
     currentEntry.satietyNote = document.getElementById('satietyNote').value.trim();
+    currentEntry.emoji = document.getElementById('entryEmoji').value.trim();
     const wasEditing = currentEntry.__isEditing;
     const originalDate = currentEntry.__editingOriginalDate;
     const originalId = currentEntry.__editingOriginalId;
