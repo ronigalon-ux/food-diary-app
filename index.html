@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 7</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 8</div>
 </header>
 
 <div class="tabs">
@@ -629,14 +629,17 @@ async function loadAllEntriesFromStore(){
   try{
     const res = await window.storage.list('entries:', true);
     if(res && res.keys && res.keys.length){
-      for(const k of res.keys){
-        try{
-          const r = await window.storage.get(k, true);
-          if(r && r.value){
+      // fetch all entry docs IN PARALLEL (was sequential - the main cause of slow mobile loads)
+      const results = await Promise.all(
+        res.keys.map(k => window.storage.get(k, true).catch(()=>null))
+      );
+      for(const r of results){
+        if(r && r.value){
+          try{
             const entry = JSON.parse(r.value);
             if(entry && entry.id) byId[entry.id] = entry;
-          }
-        }catch(e){}
+          }catch(e){}
+        }
       }
     }
   }catch(e){}
@@ -666,13 +669,21 @@ async function getAllEntriesRaw(){
 }
 async function saveEntry(entry){
   if(!entriesCache) entriesCache = await loadAllEntriesFromStore();
-  entriesCache[entry.id] = entry;
-  await window.storage.set('entries:'+entry.date+':'+entry.id, JSON.stringify(entry), true);
+  // keep the heavy full-size photo in its OWN doc so the main list stays light and loads fast.
+  // the entry doc keeps only the small thumbnail.
+  if(entry.photo){
+    try{ await window.storage.set('entryphoto:'+entry.id, entry.photo, true); }catch(e){}
+  }
+  const toStore = Object.assign({}, entry);
+  delete toStore.photo;
+  entriesCache[entry.id] = toStore;
+  await window.storage.set('entries:'+toStore.date+':'+toStore.id, JSON.stringify(toStore), true);
 }
 async function deleteEntry(date, id){
   if(!entriesCache) entriesCache = await loadAllEntriesFromStore();
   delete entriesCache[id];
   await window.storage.delete('entries:'+date+':'+id, true);
+  try{ await window.storage.delete('entryphoto:'+id, true); }catch(e){}
 }
 let entryMap = {};
 async function listAllEntries(){
@@ -785,21 +796,29 @@ function attachDelHandlers(){
       renderToday(); renderHistory();
     };
   });
-  // click a photo thumbnail to view it full-screen (uses the large version if available)
+  // click a photo thumbnail to view it full-screen (fetches the large version on demand)
   document.querySelectorAll('.entry-thumb').forEach(img=>{
     img.onclick = ()=>{
       const e = entryMap[img.dataset.id];
-      if(e) openLightbox(e.photo || e.thumb);
+      if(e) openLightbox(e);
     };
   });
 }
 
 const imgLightbox = document.getElementById('imgLightbox');
 imgLightbox.onclick = ()=> imgLightbox.style.display='none';
-function openLightbox(src){
-  if(!src) return;
-  document.getElementById('imgLightboxImg').src = src;
+async function openLightbox(e){
+  if(!e) return;
+  const imgEl = document.getElementById('imgLightboxImg');
+  // show the thumbnail (or legacy embedded photo) instantly, then upgrade to the full photo
+  imgEl.src = e.photo || e.thumb || '';
   imgLightbox.style.display='flex';
+  if(!e.photo){
+    try{
+      const r = await window.storage.get('entryphoto:'+e.id, true);
+      if(r && r.value && imgLightbox.style.display==='flex') imgEl.src = r.value;
+    }catch(err){}
+  }
 }
 
 function toInputTimeValue(timeStr){
