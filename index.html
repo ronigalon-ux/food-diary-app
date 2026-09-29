@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 8</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 9</div>
 </header>
 
 <div class="tabs">
@@ -1302,7 +1302,8 @@ async function renderInjections(){
     const dd = new Date(e.date+'T12:00:00');
     const dateLbl = dd.toLocaleDateString('he-IL',{day:'numeric', month:'numeric', year:'2-digit'});
     const injLbl = e.skipped ? 'דילוג' : (e.injectionNumber!=null ? '#'+e.injectionNumber : '-');
-    const weeks = (firstInjDate && !e.skipped) ? Math.floor((new Date(e.date+'T00:00:00') - new Date(firstInjDate+'T00:00:00'))/86400000/7) : null;
+    // use UTC midnight for both dates so daylight-saving changes don't shave an hour and skew the week count
+    const weeks = (firstInjDate && !e.skipped) ? Math.floor((new Date(e.date+'T00:00:00Z') - new Date(firstInjDate+'T00:00:00Z'))/86400000/7) : null;
     const weeksTxt = (weeks!=null && weeks>=0) ? weeksLabel(weeks) : '-';
     const cycTxt = (e.cycleDay!=null && e.cycleDay!=='') ? `${e.cycleDay} (${phaseForCycleDay(Number(e.cycleDay))})` : '-';
     return {e, dateLbl, injLbl, dose: e.dose||'-', weeksTxt, weightTxt, prevDiffTxt, totalDiffTxt,
