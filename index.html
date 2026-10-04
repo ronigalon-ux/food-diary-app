@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 13</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 14</div>
 </header>
 
 <div class="tabs">
@@ -971,6 +971,18 @@ async function renderAverages(){
     const w = wk(ws);
     if(!w.weightDate || x.date >= w.weightDate){ w.weight = x.weight; w.weightDate = x.date; }
   }
+  // attach the week's injection (dose if injected, or "ללא" if skipped) - latest record in the week
+  const injSorted = injections.filter(x=> x.date).sort((a,b)=> a.date<b.date?-1:(a.date>b.date?1:0));
+  for(const x of injSorted){
+    const ws = weekStartWed(x.date);
+    const w = wk(ws);
+    if(!w.injDate || x.date >= w.injDate){
+      w.injDate = x.date;
+      w.injHas = true;
+      w.injSkipped = !!x.skipped;
+      w.injDose = x.dose || null;
+    }
+  }
 
   const weekStarts = Object.keys(weeks).sort(); // ascending
   // weight change vs the previous week that had a measurement
@@ -1019,8 +1031,10 @@ async function renderAverages(){
     }
 
     const weightTxt = w.weightDate ? (w.weight + ' ק"ג (' + dm(w.weightDate) + ')') : '-';
+    const injTxt = w.injHas ? (w.injSkipped ? 'ללא' : (w.injDose || '-')) : '-';
     return `<tr>
       <td style="white-space:nowrap;">${dm(ws)} - ${dm(addDaysStr(ws,6))}</td>
+      <td style="white-space:nowrap;">${injTxt}</td>
       <td>${avgCalTxt}</td>
       <td>${avgProtTxt}</td>
       <td style="white-space:nowrap;">${weightTxt}</td>
@@ -1034,7 +1048,7 @@ async function renderAverages(){
     ? `<div class="day-summary" style="margin-bottom:14px;"><div class="stat"><div class="big">${avgTdee.toLocaleString('en-US')}</div><div class="lbl">ממוצע TDEE (קל' ביום)</div></div><div class="stat"><div class="big">${validTdees.length}</div><div class="lbl">שבועות בחישוב</div></div></div>`
     : '';
 
-  const headers = ['שבוע','ממוצע קל\' יומי','ממוצע חלבון יומי','משקל','שינוי','TDEE'];
+  const headers = ['שבוע','הזרקה','ממוצע קל\' יומי','ממוצע חלבון יומי','משקל','שינוי','TDEE'];
   el.innerHTML = summary + `<div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
     <table class="inj-table">
       <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
