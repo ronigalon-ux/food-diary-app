@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 12</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 13</div>
 </header>
 
 <div class="tabs">
@@ -201,7 +201,7 @@
 
   <div class="view" id="view-averages">
     <div class="empty-note" style="padding:6px 4px 14px; text-align:right;">
-      ממוצע יומי לכל שבוע (שבוע = יום ד' עד יום ג'). הממוצע מחושב לפי הימים שתיעדת בהם אוכל. "שינוי משקל" הוא ההפרש בין מדידת המשקל של השבוע למדידה של השבוע הקודם. הערכת ה-TDEE היא קירוב גס (מבוסס על כ-7,700 קל' לק"ג) - משקל שבועי מושפע גם ממים, מחזור ועוד, אז ההערכה מדויקת יותר לאורך כמה שבועות ולא כמספר בודד.
+      ממוצע יומי לכל שבוע (שבוע = יום ד' עד יום ג'). מוצגים רק שבועות שתיעדת בהם אוכל בכל 7 הימים. "שינוי" הוא ההפרש בין מדידת המשקל של השבוע למדידה של השבוע הקודם. הערכת ה-TDEE היא קירוב גס (מבוסס על כ-7,700 קל' לק"ג) - מדויקת יותר לאורך כמה שבועות ולא כמספר בודד.
     </div>
     <div id="avgList"></div>
   </div>
@@ -318,6 +318,7 @@
       <div class="field-lbl">הערות (אופציונלי - רמת רעב, רגש, הקשר וכו')</div>
       <textarea id="notesText" rows="2" placeholder="למשל: אכלתי מהר בין פגישות, לא ממש הייתי רעבה"></textarea>
       <button class="primary-btn" id="confirmBtn">אישור התיאור - הערך קלוריות</button>
+      <button class="secondary-btn" id="manualEntryBtn">או: הזנה ידנית - אני אקבע קלוריות וחלבון</button>
       <div class="status-line" id="calcStatus"></div>
     </div>
 
@@ -985,47 +986,64 @@ async function renderAverages(){
     }
   }
 
-  const ordered = weekStarts.slice().reverse(); // newest first
-  if(ordered.length===0){ el.innerHTML = '<div class="empty-note">אין עדיין נתונים.</div>'; return; }
+  // show only full weeks (all 7 days logged), newest first
+  const ordered = weekStarts.slice().reverse().filter(ws=> weeks[ws].days.size === 7);
+  if(ordered.length===0){
+    el.innerHTML = '<div class="empty-note">אין עדיין שבוע שתועד בו אוכל בכל 7 הימים. הטבלה תתמלא כשיהיה שבוע מלא.</div>';
+    return;
+  }
 
-  el.innerHTML = ordered.map(ws=>{
+  const EXTREME = 0.8; // kg/week swing above this is almost certainly water/cycle, not fat -> TDEE not meaningful
+  const validTdees = [];
+  const rows = ordered.map(ws=>{
     const w = weeks[ws];
     const nDays = w.days.size;
-    const avgCal = nDays ? Math.round(w.sumCal / nDays).toLocaleString('en-US') : '-';
-    const avgProt = nDays ? String(Math.round(w.sumProt / nDays)) : '-';
+    const intake = w.sumCal / nDays;
+    const avgCalTxt = Math.round(intake).toLocaleString('en-US');
+    const avgProtTxt = String(Math.round(w.sumProt / nDays));
     const ch = changeByWeek[ws];
+
     let chTxt = '-', chColor = 'var(--ink-soft)';
     if(ch!=null){
       const sign = ch>0 ? '+' : (ch<0 ? '-' : '');
       chTxt = sign + Math.abs(ch).toFixed(2) + ' ק"ג';
       chColor = ch>0 ? 'var(--clay)' : (ch<0 ? 'var(--sage-deep)' : 'var(--ink-soft)');
     }
-    // TDEE insight: weight change over the week reflects energy balance (~7,700 קל' לק"ג גוף).
-    // daily deficit/surplus = change_kg * 7700 / 7 = change_kg * 1100 ; TDEE = intake + deficit.
-    let insight = '';
-    if(nDays>0 && ch!=null){
-      const intake = w.sumCal / nDays;
-      const tdee = Math.round((intake - ch*1100)/10)*10; // ch<0 (loss) raises the estimate
-      let moveTxt;
-      if(ch < -0.05) moveTxt = 'וירדת ' + Math.abs(ch).toFixed(1) + ' ק"ג';
-      else if(ch > 0.05) moveTxt = 'ועלית ' + Math.abs(ch).toFixed(1) + ' ק"ג';
-      else moveTxt = 'והמשקל נשאר יציב';
-      const intakeTxt = Math.round(intake).toLocaleString('en-US');
-      insight = `השבוע צרכת בממוצע ${intakeTxt} קל' ביום, ${moveTxt}. הנתונים מצביעים על TDEE משוער של כ-${tdee.toLocaleString('en-US')} קל' ביום${nDays<7 ? ' (הערכה חלקית - תיעדת '+nDays+' ימים)' : ''}.`;
+
+    // TDEE = intake + daily deficit; deficit = -change_kg * 7700 / 7 = -change_kg * 1100
+    let tdeeTxt = 'NA';
+    if(ch!=null && Math.abs(ch) <= EXTREME){
+      const tdee = Math.round((intake - ch*1100)/10)*10;
+      tdeeTxt = tdee.toLocaleString('en-US');
+      validTdees.push(tdee);
     }
-    return `<div class="entry-card" style="flex-direction:column; align-items:stretch; gap:6px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline;">
-        <div class="date" style="font-weight:600;">${dm(ws)} - ${dm(addDaysStr(ws,6))}</div>
-        <div style="font-weight:600; font-size:14px; color:${chColor};">${chTxt}</div>
-      </div>
-      <div class="entry-nums">
-        <span>ממוצע קלוריות יומי: <b>${avgCal}</b></span>
-        <span>ממוצע חלבון יומי: <b>${avgProt}</b> ג'</span>
-      </div>
-      ${insight ? `<div style="font-size:12.5px; line-height:1.5; color:var(--sage-deep); background:var(--paper-2); border-radius:10px; padding:8px 10px;">💡 ${insight}</div>` : ''}
-      <div style="font-size:11px; color:var(--ink-soft);">${nDays} ימים תועדו${w.weightDate ? ' · משקל: '+w.weight+' ק"ג ('+dm(w.weightDate)+')' : ''}</div>
-    </div>`;
+
+    const weightTxt = w.weightDate ? (w.weight + ' ק"ג (' + dm(w.weightDate) + ')') : '-';
+    return `<tr>
+      <td style="white-space:nowrap;">${dm(ws)} - ${dm(addDaysStr(ws,6))}</td>
+      <td>${avgCalTxt}</td>
+      <td>${avgProtTxt}</td>
+      <td style="white-space:nowrap;">${weightTxt}</td>
+      <td style="white-space:nowrap; color:${chColor}; font-weight:600;">${chTxt}</td>
+      <td style="font-weight:600;">${tdeeTxt}</td>
+    </tr>`;
   }).join('');
+
+  const avgTdee = validTdees.length ? Math.round(validTdees.reduce((a,b)=>a+b,0)/validTdees.length/10)*10 : null;
+  const summary = avgTdee!=null
+    ? `<div class="day-summary" style="margin-bottom:14px;"><div class="stat"><div class="big">${avgTdee.toLocaleString('en-US')}</div><div class="lbl">ממוצע TDEE (קל' ביום)</div></div><div class="stat"><div class="big">${validTdees.length}</div><div class="lbl">שבועות בחישוב</div></div></div>`
+    : '';
+
+  const headers = ['שבוע','ממוצע קל\' יומי','ממוצע חלבון יומי','משקל','שינוי','TDEE'];
+  el.innerHTML = summary + `<div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <table class="inj-table">
+      <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+  <div style="font-size:11px; color:var(--ink-soft); margin-top:10px; line-height:1.6;">
+    <b>NA</b> ב-TDEE = אין מדידת משקל לאותו שבוע, או שתנודת המשקל גדולה מ-${EXTREME} ק"ג בשבוע - תנודה כזאת היא כמעט תמיד מים/מחזור ולא שומן, ולכן לא ניתן להעריך ממנה TDEE אמין. ממוצע ה-TDEE למעלה מחושב רק מהשבועות ההגיוניים (לא NA).
+  </div>`;
 }
 
 // ---------- add flow ----------
@@ -1225,6 +1243,22 @@ document.getElementById('confirmBtn').onclick = async ()=>{
     calcStatus.textContent = 'שגיאה בחישוב: ' + (e.message||e);
   }
   btn.disabled = false; btn.textContent = 'אישור התיאור - הערך קלוריות';
+};
+
+// manual entry: skip the AI calculation and let the user type calories/protein directly (no API call, no cost)
+document.getElementById('manualEntryBtn').onclick = ()=>{
+  currentEntry.description = document.getElementById('descText').value.trim();
+  currentEntry.notes = document.getElementById('notesText').value.trim();
+  const calcStatus = document.getElementById('calcStatus');
+  if(!currentEntry.description){ calcStatus.textContent = 'כתבי תיאור קודם (למשל: "ארוחת שישי, הערכה גסה").'; return; }
+  calcStatus.textContent = '';
+  currentEntry.breakdown = [];
+  renderBreakdownEditable([]);
+  document.getElementById('resCal').value = '';
+  document.getElementById('resProt').value = '';
+  document.getElementById('step-confirm').style.display='none';
+  document.getElementById('step-result').style.display='block';
+  document.getElementById('resCal').focus();
 };
 
 async function estimateNutrition(description){
