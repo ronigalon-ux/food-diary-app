@@ -174,12 +174,13 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 9</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 10</div>
 </header>
 
 <div class="tabs">
   <div class="tab active" data-tab="today">היום</div>
   <div class="tab" data-tab="history">היסטוריה</div>
+  <div class="tab" data-tab="averages">ממוצע</div>
   <div class="tab" data-tab="injections">זריקות ומשקל</div>
   <div class="tab" data-tab="presets">קבועים אישיים</div>
   <div class="tab" data-tab="share">שיתוף</div>
@@ -196,6 +197,13 @@
 
   <div class="view" id="view-history">
     <div id="histList"></div>
+  </div>
+
+  <div class="view" id="view-averages">
+    <div class="empty-note" style="padding:6px 4px 14px; text-align:right;">
+      ממוצע יומי לכל שבוע (שבוע = יום ד' עד יום ג'). הממוצע מחושב לפי הימים שתיעדת בהם אוכל. "שינוי משקל" הוא ההפרש בין מדידת המשקל של השבוע למדידה של השבוע הקודם.
+    </div>
+    <div id="avgList"></div>
   </div>
 
   <div class="view" id="view-injections">
@@ -496,6 +504,7 @@ document.querySelectorAll('.tab').forEach(t=>{
     t.classList.add('active');
     document.getElementById('view-'+t.dataset.tab).classList.add('active');
     if(t.dataset.tab==='history') renderHistory();
+    if(t.dataset.tab==='averages') renderAverages();
     if(t.dataset.tab==='presets') renderPresets();
     if(t.dataset.tab==='injections'){ renderInjections(); }
   };
@@ -918,6 +927,91 @@ async function renderHistory(){
     };
   });
   attachDelHandlers();
+}
+
+// ---------- weekly averages ----------
+// a week runs Wednesday -> Tuesday. return the Wednesday (week start) for any date, in UTC to avoid DST drift.
+function weekStartWed(dateStr){
+  const d = new Date(dateStr+'T00:00:00Z');
+  const diff = (d.getUTCDay() - 3 + 7) % 7; // days since the most recent Wednesday
+  d.setUTCDate(d.getUTCDate() - diff);
+  return d.toISOString().slice(0,10);
+}
+function addDaysStr(dateStr, n){
+  const d = new Date(dateStr+'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0,10);
+}
+function dm(dateStr){
+  const d = new Date(dateStr+'T00:00:00Z');
+  return d.getUTCDate() + '.' + (d.getUTCMonth()+1);
+}
+
+async function renderAverages(){
+  const entries = await listAllEntries();
+  const injections = await getAllInjectionsRaw();
+  const el = document.getElementById('avgList');
+
+  // bucket food entries by week
+  const weeks = {}; // weekStart -> {sumCal, sumProt, days:Set}
+  function wk(ws){ return weeks[ws] || (weeks[ws] = {sumCal:0, sumProt:0, days:new Set(), weight:null, weightDate:null}); }
+  for(const e of entries){
+    if(!e.date) continue;
+    const ws = weekStartWed(e.date);
+    const w = wk(ws);
+    w.sumCal += e.calories||0;
+    w.sumProt += e.protein||0;
+    w.days.add(e.date);
+  }
+  // attach the latest weight measurement that falls inside each week
+  const weighed = injections.filter(x=> x.weight!=null && x.date).sort((a,b)=> a.date<b.date?-1:(a.date>b.date?1:0));
+  for(const x of weighed){
+    const ws = weekStartWed(x.date);
+    const w = wk(ws);
+    if(!w.weightDate || x.date >= w.weightDate){ w.weight = x.weight; w.weightDate = x.date; }
+  }
+
+  const weekStarts = Object.keys(weeks).sort(); // ascending
+  // weight change vs the previous week that had a measurement
+  let prevWeight = null;
+  const changeByWeek = {};
+  for(const ws of weekStarts){
+    const w = weeks[ws];
+    if(w.weight!=null){
+      changeByWeek[ws] = (prevWeight!=null) ? (w.weight - prevWeight) : null;
+      prevWeight = w.weight;
+    } else {
+      changeByWeek[ws] = null;
+    }
+  }
+
+  const ordered = weekStarts.slice().reverse(); // newest first
+  if(ordered.length===0){ el.innerHTML = '<div class="empty-note">אין עדיין נתונים.</div>'; return; }
+
+  el.innerHTML = ordered.map(ws=>{
+    const w = weeks[ws];
+    const nDays = w.days.size;
+    const avgCal = nDays ? smartRound(w.sumCal / nDays) : '-';
+    const avgProt = nDays ? smartRound(w.sumProt / nDays) : '-';
+    const ch = changeByWeek[ws];
+    let chTxt = '-', chColor = 'var(--ink-soft)';
+    if(ch!=null){
+      const sign = ch>0 ? '+' : (ch<0 ? '-' : '');
+      chTxt = sign + Math.abs(ch).toFixed(2) + ' ק"ג';
+      chColor = ch>0 ? 'var(--clay)' : (ch<0 ? 'var(--sage-deep)' : 'var(--ink-soft)');
+    }
+    return `<div class="entry-card" style="flex-direction:column; align-items:stretch; gap:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline;">
+        <div class="date" style="font-weight:600;">${dm(ws)} - ${dm(addDaysStr(ws,6))}</div>
+        <div style="font-weight:600; font-size:14px; color:${chColor};">${chTxt}</div>
+      </div>
+      <div class="entry-nums">
+        <span>ממוצע קלוריות יומי: <b>${avgCal}</b></span>
+        <span>ממוצע חלבון יומי: <b>${avgProt}</b> ג'</span>
+      </div>
+      <div style="font-size:11px; color:var(--ink-soft);">${nDays} ימים תועדו${w.weightDate ? ' · משקל: '+w.weight+' ק"ג ('+dm(w.weightDate)+')' : ''}</div>
+    </div>`;
+  }).join('');
 }
 
 // ---------- add flow ----------
