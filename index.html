@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 14</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 15</div>
 </header>
 
 <div class="tabs">
@@ -1031,7 +1031,8 @@ async function renderAverages(){
     }
 
     const weightTxt = w.weightDate ? (w.weight + ' ק"ג (' + dm(w.weightDate) + ')') : '-';
-    const injTxt = w.injHas ? (w.injSkipped ? 'ללא' : (w.injDose || '-')) : '-';
+    // "with the drug" that week = an injection was logged (show dose). skipped OR no record at all = "ללא".
+    const injTxt = (w.injHas && !w.injSkipped) ? (w.injDose || 'עם תרופה') : 'ללא';
     return `<tr>
       <td style="white-space:nowrap;">${dm(ws)} - ${dm(addDaysStr(ws,6))}</td>
       <td style="white-space:nowrap;">${injTxt}</td>
