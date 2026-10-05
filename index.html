@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 16</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 17</div>
 </header>
 
 <div class="tabs">
@@ -1281,12 +1281,11 @@ document.getElementById('manualEntryBtn').onclick = ()=>{
 
 async function estimateNutrition(description){
   const presets = cachedPresets && cachedPresets.length ? cachedPresets : await getPresets();
-  const matched = presets.filter(p => description.includes(p.keyword));
   let knownBlock = '';
-  if(matched.length){
-    knownBlock = '\n\nהערכים הבאים ידועים במדויק (מהאריזה) - השתמשי בהם כמו שהם, בלי להעריך אותם מחדש:\n' +
-      matched.map(p=>`- "${p.keyword}" = ${p.note}: ${p.calories} קלוריות, ${p.protein} גרם חלבון.`).join('\n') +
-      '\nהערכי רק את שאר הפריטים שמופיעים בתיאור ולא מכוסים ברשימה הזו, וסכמי הכל יחד.';
+  if(presets.length){
+    knownBlock = '\n\nלהלן ערכים תזונתיים ידועים ומדויקים לפריטים מסוימים, כל ערך מתייחס לכמות/יחידה שמצוינת בסוגריים. אם פריט בתיאור תואם לאחד מהם - גם אם הניסוח שונה מעט (למשל יחיד/רבים, "כף"/"כפות") או אם הכמות שונה - השתמשי בערך הידוע כבסיס ליחידה הנתונה, והתאימי אותו פרופורציונלית לכמות שכתובה בתיאור. לדוגמה: אם הערך הידוע הוא ל"כף אורז" אחת והמשתמשת כתבה "3 כפות אורז", הכפילי את הערך ב-3:\n' +
+      presets.map(p=>`- ${p.keyword} (${p.note}): ${p.calories} קלוריות, ${p.protein} גרם חלבון.`).join('\n') +
+      '\nפריטים שלא מופיעים ברשימה הזו - הערכי לפי ערכים תזונתיים סטנדרטיים. סכמי הכל יחד.';
   }
   const prompt = `זהו תיאור של מנת אוכל: "${description}".${knownBlock}
 
