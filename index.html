@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 17</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 18</div>
 </header>
 
 <div class="tabs">
@@ -948,6 +948,18 @@ function dm(dateStr){
   return d.getUTCDate() + '.' + (d.getUTCMonth()+1);
 }
 
+let avgIncludeMap = null; // ws -> bool: whether the week is counted in the TDEE average (user-controlled)
+let avgWeekTdee = {};     // ws -> computed TDEE number for the week
+async function loadAvgInclude(){
+  if(avgIncludeMap) return avgIncludeMap;
+  try{ const r = await window.storage.get('avgInclude', false); avgIncludeMap = (r && r.value) ? JSON.parse(r.value) : {}; }
+  catch(e){ avgIncludeMap = {}; }
+  return avgIncludeMap;
+}
+async function saveAvgInclude(){
+  try{ await window.storage.set('avgInclude', JSON.stringify(avgIncludeMap||{}), false); }catch(e){}
+}
+
 async function renderAverages(){
   const entries = await listAllEntries();
   const injections = await getAllInjectionsRaw();
@@ -1005,8 +1017,9 @@ async function renderAverages(){
     return;
   }
 
-  const EXTREME = 0.8; // kg/week swing above this is almost certainly water/cycle, not fat -> TDEE not meaningful
-  const validTdees = [];
+  const EXTREME = 0.8; // kg/week swing above this is likely water/cycle, not fat -> unchecked by default
+  await loadAvgInclude();
+  avgWeekTdee = {}; // ws -> tdee number, for weeks where a TDEE can be computed
   const rows = ordered.map(ws=>{
     const w = weeks[ws];
     const nDays = w.days.size;
@@ -1023,17 +1036,18 @@ async function renderAverages(){
     }
 
     // TDEE = intake + daily deficit; deficit = -change_kg * 7700 / 7 = -change_kg * 1100
-    let tdeeTxt = 'NA';
-    if(ch!=null && Math.abs(ch) <= EXTREME){
+    let tdeeTxt = 'NA', checkboxCell = '<td>-</td>';
+    if(ch!=null){
       const tdee = Math.round((intake - ch*1100)/10)*10;
       tdeeTxt = tdee.toLocaleString('en-US');
-      validTdees.push(tdee);
+      avgWeekTdee[ws] = tdee;
+      const defaultInc = Math.abs(ch) <= EXTREME; // big swings start unchecked
+      const inc = (avgIncludeMap && (ws in avgIncludeMap)) ? avgIncludeMap[ws] : defaultInc;
+      checkboxCell = `<td style="text-align:center;"><input type="checkbox" class="avg-inc" data-ws="${ws}" ${inc?'checked':''} style="width:18px;height:18px;"></td>`;
     }
 
     const weightTxt = w.weightDate ? (w.weight + ' ק"ג (' + dm(w.weightDate) + ')') : '-';
     // the injection that "covers" a week is the one taken in the PREVIOUS week
-    // (e.g. a shot on 22.9, at the end of the prior week, covers 23-29.9).
-    // show its dose if injected; skipped or no record at all = "ללא".
     const pw = weeks[addDaysStr(ws, -7)];
     const injTxt = (pw && pw.injHas && !pw.injSkipped) ? (pw.injDose || 'עם תרופה') : 'ללא';
     return `<tr>
@@ -1044,15 +1058,13 @@ async function renderAverages(){
       <td style="white-space:nowrap;">${weightTxt}</td>
       <td style="white-space:nowrap; color:${chColor}; font-weight:600;">${chTxt}</td>
       <td style="font-weight:600;">${tdeeTxt}</td>
+      ${checkboxCell}
     </tr>`;
   }).join('');
 
-  const avgTdee = validTdees.length ? Math.round(validTdees.reduce((a,b)=>a+b,0)/validTdees.length/10)*10 : null;
-  const summary = avgTdee!=null
-    ? `<div class="day-summary" style="margin-bottom:14px;"><div class="stat"><div class="big">${avgTdee.toLocaleString('en-US')}</div><div class="lbl">ממוצע TDEE (קל' ביום)</div></div><div class="stat"><div class="big">${validTdees.length}</div><div class="lbl">שבועות בחישוב</div></div></div>`
-    : '';
+  const summary = `<div class="day-summary" style="margin-bottom:14px;"><div class="stat"><div class="big" id="avgTdeeBig">-</div><div class="lbl">ממוצע TDEE (קל' ביום)</div></div><div class="stat"><div class="big" id="avgTdeeCount">0</div><div class="lbl">שבועות בחישוב</div></div></div>`;
 
-  const headers = ['שבוע','הזרקה','ממוצע קל\' יומי','ממוצע חלבון יומי','משקל','שינוי','TDEE'];
+  const headers = ['שבוע','הזרקה','ממוצע קל\' יומי','ממוצע חלבון יומי','משקל','שינוי','TDEE','בחישוב'];
   el.innerHTML = summary + `<div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
     <table class="inj-table">
       <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
@@ -1060,8 +1072,29 @@ async function renderAverages(){
     </table>
   </div>
   <div style="font-size:11px; color:var(--ink-soft); margin-top:10px; line-height:1.6;">
-    <b>NA</b> ב-TDEE = אין מדידת משקל לאותו שבוע, או שתנודת המשקל גדולה מ-${EXTREME} ק"ג בשבוע - תנודה כזאת היא כמעט תמיד מים/מחזור ולא שומן, ולכן לא ניתן להעריך ממנה TDEE אמין. ממוצע ה-TDEE למעלה מחושב רק מהשבועות ההגיוניים (לא NA).
+    סמני או הסירי את התיבה "בחישוב" כדי לקבוע אילו שבועות נספרים בממוצע ה-TDEE. שבועות עם תנודת משקל גדולה (מעל ${EXTREME} ק"ג) מגיעות לא-מסומנות כברירת מחדל, כי תנודה כזאת היא בדרך כלל מים/מחזור ולא שומן - אבל את יכולה לסמן אותן בחזרה. "NA" = אין מדידת משקל לאותו שבוע, אז אין TDEE לחשב.
   </div>`;
+
+  // wire checkboxes and compute the average from the currently-checked weeks
+  document.querySelectorAll('#avgList .avg-inc').forEach(cb=>{
+    cb.onchange = ()=>{ cb.closest('tr').style.opacity = cb.checked ? '' : '0.45'; updateAvgSummary(); };
+    cb.closest('tr').style.opacity = cb.checked ? '' : '0.45';
+  });
+  updateAvgSummary();
+}
+
+function updateAvgSummary(){
+  let sum=0, n=0;
+  document.querySelectorAll('#avgList .avg-inc').forEach(cb=>{
+    avgIncludeMap[cb.dataset.ws] = cb.checked;
+    if(cb.checked){ const t = avgWeekTdee[cb.dataset.ws]; if(t!=null){ sum+=t; n++; } }
+  });
+  const avg = n ? Math.round(sum/n/10)*10 : null;
+  const bigEl = document.getElementById('avgTdeeBig');
+  const cntEl = document.getElementById('avgTdeeCount');
+  if(bigEl) bigEl.textContent = avg!=null ? avg.toLocaleString('en-US') : '-';
+  if(cntEl) cntEl.textContent = n;
+  saveAvgInclude();
 }
 
 // ---------- add flow ----------
