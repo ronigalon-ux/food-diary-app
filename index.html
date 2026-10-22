@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 18</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 21</div>
 </header>
 
 <div class="tabs">
@@ -462,7 +462,18 @@ async function anthropicRequest(body, attempt=1){
 }
 
 async function callClaude(messages){
-  return await anthropicRequest({ model: ANTHROPIC_MODEL, max_tokens: 1000, messages });
+  // temperature 0 = same description gives the same estimate (no random swings between runs)
+  const body = { model: ANTHROPIC_MODEL, max_tokens: 1000, messages, temperature: 0 };
+  try{
+    return await anthropicRequest(body);
+  }catch(e){
+    // safety net: if the model ever rejects the temperature parameter, retry without it
+    if(/temperature/i.test((e && e.message) || '')){
+      delete body.temperature;
+      return await anthropicRequest(body);
+    }
+    throw e;
+  }
 }
 async function callClaudeWithSearch(promptText){
   return await anthropicRequest({
@@ -1312,6 +1323,50 @@ document.getElementById('manualEntryBtn').onclick = ()=>{
   document.getElementById('resCal').focus();
 };
 
+// ---------- deterministic produce table (code does the math for low-calorie vegetables) ----------
+// per100 = kcal / protein(g) per 100 g; gpu = typical grams per single unit (only where it makes sense)
+const PRODUCE_TABLE = [
+  {keys:['פלפל'], cal:30, prot:1.0, gpu:150},
+  {keys:['עגבניות שרי','עגבנית שרי','עגבניית שרי','שרי'], cal:18, prot:0.9, gpu:17},
+  {keys:['עגבניה','עגבנייה','עגבניות','עגבנית'], cal:19, prot:0.9, gpu:130},
+  {keys:['מלפפון','מלפפונים'], cal:15, prot:0.7, gpu:150},
+  {keys:['חסה','עלי חסה'], cal:15, prot:1.4, gpu:null},
+  {keys:['גזר'], cal:41, prot:0.9, gpu:60},
+  {keys:['כרוב'], cal:25, prot:1.3, gpu:null},
+  {keys:['קישוא','קישואים'], cal:17, prot:1.2, gpu:200},
+  {keys:['חציל','חצילים'], cal:25, prot:1.0, gpu:null},
+  {keys:['קולורבי'], cal:27, prot:1.7, gpu:180},
+  {keys:['צנונית','צנוניות'], cal:16, prot:0.7, gpu:10},
+  {keys:['סלרי'], cal:14, prot:0.7, gpu:null}
+];
+// if the item name contains any of these, it is not plain raw produce - leave Claude's estimate alone
+const PRODUCE_EXCLUDE = ['חמוץ','חמוצים','כבוש','כבושים','מטוגן','מוקפץ','אפוי','צלוי','מבושל','רוטב','מיונז','טחינה','ממרח','מיובש','מרק','סלט','פסטה','פיצה','שמן','גבינה','ממולא','תבשיל','שקשוקה','פירה','צ\'יפס','קציצ','בורקס','כדור'];
+
+function applyProduceTable(breakdown, presets){
+  let changed = false;
+  const out = (breakdown||[]).map(b=>{
+    const item = String(b.item||'');
+    const base = {item: b.item, calories: Number(b.calories)||0, protein: Number(b.protein)||0};
+    const qty = Number(b.qty);
+    if(!(qty>0)) return base;
+    if(PRODUCE_EXCLUDE.some(w=> item.includes(w))) return base;
+    if((presets||[]).some(p=> p.keyword && item.includes(p.keyword))) return base; // never override personal presets
+    const row = PRODUCE_TABLE.find(r=> r.keys.some(k=> item.includes(k)));
+    if(!row) return base;
+    let grams = null;
+    if(b.unit==='g') grams = qty;
+    else if(b.unit==='unit' && row.gpu) grams = qty*row.gpu;
+    if(grams==null) return base;
+    changed = true;
+    return {
+      item: b.item,
+      calories: Math.round(grams*row.cal/100*10)/10,
+      protein: Math.round(grams*row.prot/100*10)/10
+    };
+  });
+  return {breakdown: out, changed};
+}
+
 async function estimateNutrition(description){
   const presets = cachedPresets && cachedPresets.length ? cachedPresets : await getPresets();
   let knownBlock = '';
@@ -1322,14 +1377,53 @@ async function estimateNutrition(description){
   }
   const prompt = `זהו תיאור של מנת אוכל: "${description}".${knownBlock}
 
-לכל פריט בתיאור (שאינו ברשימת הערכים הידועים למעלה) - הערכי את הערך התזונתי שלו (קלוריות וחלבון) לפי ערכים תזונתיים סטנדרטיים ומקובלים (כמו טבלאות USDA / ערכים טיפוסיים ליצרן). התאימי את הערך לכמות שמתוארת (משקל בגרם, או מספר יחידות כפול ערך ליחידה).
+פרקי את המנה לפריטים בודדים, והעריכי כל פריט בנפרד: ערך תזונתי מקובל ליחידה/ל-100 גרם, מוכפל בכמות שבתיאור. השתמשי בערכים תזונתיים סטנדרטיים (USDA / ערכים טיפוסיים ליצרן).
 
-תני הערכה תזונתית מדויקת ככל האפשר לכל המנה. החזירי אך ורק JSON תקני בפורמט הבא, בלי טקסט נוסף ובלי markdown:
-{"calories": number, "protein": number, "breakdown": [{"item": "string", "calories": number, "protein": number}]}`;
+כללים מחייבים (לא הצעות):
+1. ערכי העוגן שלהלן מחייבים. אם פריט מופיע ברשימה, חובה להשתמש בערך שלו ולהכפיל בכמות שבתיאור. אסור לסטות ממנו.
+2. לכל פריט: חשבי קודם ערך ליחידה אחת, ואז הכפילי בכמות. בדקי שהתוצאה הגיונית - ירק, ירק עלים או עגבנייה לא יכולים להגיע לעשרות קלוריות ליחידה קטנה.
+3. אל תפריזי ואל תוסיפי "מרווח ביטחון".
+4. אל תוסיפי לפריט שמן, רוטב או תוספות שלא מופיעים בתיאור (אלא אם הבישול כולל שמן באופן מובן מאליו, כמו "מוקפץ" או "מטוגן").
+
+ערכי עוגן מחייבים (קלוריות / חלבון בגרם):
+- עגבניית שרי: 3 קל' / 0.15 ליחידה (כ-17 גרם)
+- עגבנייה בינונית (כ-130 גרם): 25 קל' / 1.2
+- מלפפון: 15 קל' ל-100 גרם; מלפפון בינוני (כ-150 גרם): 22 קל' / 1
+- חסה ועלים ירוקים: 15 קל' ל-100 גרם
+- פלפל: 30 קל' ל-100 גרם
+- גזר: 41 קל' ל-100 גרם; גזר בינוני (כ-60 גרם): 25 קל'
+- בצל: 40 קל' ל-100 גרם
+- כרוב: 25 קל' ל-100 גרם
+- ברוקולי (לא מוקפץ): 34 קל' ל-100 גרם
+- קישוא: 17 קל' ל-100 גרם
+- חציל: 25 קל' ל-100 גרם
+- עשבי תיבול (פטרוזיליה, כוסברה, נענע וכו'): כמעט 0
+- תפוח בינוני: 80 קל'; בננה בינונית: 105 קל'; תפוז בינוני: 65 קל'
+- ביצה גדולה: 75 קל' / 6.5
+- שמן זית: כף 120 קל', כפית 40 קל'
+- פרוסת לחם מלא (כ-30 גרם): 80 קל' / 3
+- גבינת קוטג' 5%: 95 קל' ל-100 גרם / 11
+- חזה עוף מבושל: 165 קל' ל-100 גרם / 31
+
+פריטים שלא מופיעים ברשימת העוגן או ברשימת הערכים הידועים - הערכי לפי ערכים תזונתיים סטנדרטיים.
+
+תני הערכה תזונתית מדויקת ומציאותית ככל האפשר לכל המנה. החזירי אך ורק JSON תקני בפורמט הבא, בלי טקסט נוסף ובלי markdown:
+לכל פריט בפירוק הוסיפי גם את הכמות שחישבת: "qty" (מספר) ו-"unit" - המילה "unit" אם הכמות ביחידות (למשל 6 עגבניות שרי, חצי מלפפון = 0.5), או "g" אם הכמות בגרמים. אם אי אפשר לקבוע כמות - השמיטי את qty ו-unit.
+{"calories": number, "protein": number, "breakdown": [{"item": "string", "calories": number, "protein": number, "qty": number, "unit": "unit" or "g"}]}`;
   const text = await callClaude([{ role:'user', content: prompt }]);
   const match = text.replace(/\`\`\`json|\`\`\`/g,'').match(/\{[\s\S]*\}/);
   if(!match) throw new Error('לא התקבל JSON תקין מהתשובה');
-  return JSON.parse(match[0]);
+  const parsed = JSON.parse(match[0]);
+  // code-side guard: recompute plain low-calorie vegetables from the fixed table, then re-sum the totals
+  if(parsed.breakdown && parsed.breakdown.length){
+    const fixed = applyProduceTable(parsed.breakdown, presets);
+    parsed.breakdown = fixed.breakdown;
+    if(fixed.changed){
+      parsed.calories = parsed.breakdown.reduce((a,b)=>a+(b.calories||0),0);
+      parsed.protein = parsed.breakdown.reduce((a,b)=>a+(b.protein||0),0);
+    }
+  }
+  return parsed;
 }
 
 document.getElementById('redoBtn').onclick = ()=>{
