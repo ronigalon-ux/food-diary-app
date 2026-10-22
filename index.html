@@ -174,7 +174,7 @@
 <header>
   <h1>יומן אכילה</h1>
   <div class="sub" id="todayLabel"></div>
-  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 21</div>
+  <div style="font-size:10px; color:var(--ink-soft); opacity:.55; margin-top:3px;">גרסה 23</div>
 </header>
 
 <div class="tabs">
@@ -244,6 +244,7 @@
     <div class="share-box">
       <p><b>ייצוא כל הנתונים (למעבר לגרסה עצמאית)</b></p>
       <button class="primary-btn" id="exportAllBtn" style="margin-top:0;">ייצוא הכל כ-JSON</button>
+      <button class="primary-btn" id="exportTextBtn" style="margin-top:8px;">ייצוא טקסט בלבד (בלי תמונות - קצר יותר)</button>
       <textarea id="exportAllResult" rows="10" style="margin-top:10px; font-family:monospace; font-size:10px;" readonly placeholder="התוצאה תופיע כאן - תעתיקי ותשלחי לי את כל התוכן"></textarea>
     </div>
     <div style="height:14px;"></div>
@@ -1804,8 +1805,12 @@ document.getElementById('importHistBtn').onclick = async ()=>{
 
 // seed default presets once
 async function seedDefaultPresets(){
-  const existing = await getPresets();
-  if(existing.length > 0) return;
+  // seed ONLY when the presets doc is confirmed missing. A failed read must never trigger a write
+  // (previously a failed read looked like "no presets" and overwrote the saved list with the defaults).
+  let r;
+  try{ r = await window.storage.get('presets', false); }
+  catch(e){ return; }
+  if(r && r.value) return;
   await setPresets([
     {keyword:'טונה ריו', note:'קופסת טונה Rio Mare בשמן זית, 80 גרם (לפי הערך לכל הקופסה)', calories:170, protein:19.2, emoji:''},
     {keyword:'קפה', note:'קפה עם רבע כוס (כ-60 מ"ל) חלב שיבולת שועל OATLY בריסטה', calories:37, protein:0.7, emoji:'☕️'}
@@ -1845,6 +1850,23 @@ document.getElementById('exportAllBtn').onclick = async ()=>{
     const presets = await getPresets();
     const dump = { entries, injections, presets, exportedAt: new Date().toISOString() };
     out.value = JSON.stringify(dump);
+  }catch(e){
+    out.value = 'שגיאה בייצוא: ' + (e.message||e);
+  }
+};
+
+document.getElementById('exportTextBtn').onclick = async ()=>{
+  const out = document.getElementById('exportAllResult');
+  out.value = 'אוספת נתונים...';
+  try{
+    const entries = (await listAllEntries()).map(e=>{
+      const c = Object.assign({}, e);
+      delete c.thumb; delete c.photo;
+      return c;
+    });
+    const injections = await getAllInjectionsRaw();
+    const presets = await getPresets();
+    out.value = JSON.stringify({ entries, injections, presets, exportedAt: new Date().toISOString() });
   }catch(e){
     out.value = 'שגיאה בייצוא: ' + (e.message||e);
   }
@@ -1915,12 +1937,15 @@ async function runMigrationIfNeeded(){
         await window.storage.set('entries:'+e.date+':'+e.id, JSON.stringify(e), true);
       }
     }
-    const existingInj = await window.storage.get('injections', true).catch(()=>null);
-    if(!existingInj || !existingInj.value){
+    // write migrated data ONLY if the doc is confirmed missing - never after a failed read
+    let injDoc = null, injReadOk = true;
+    try{ injDoc = await window.storage.get('injections', true); }catch(e){ injReadOk = false; }
+    if(injReadOk && (!injDoc || !injDoc.value)){
       await window.storage.set('injections', JSON.stringify(MIGRATED_INJECTIONS), true);
     }
-    const existingPresets = await window.storage.get('presets', false).catch(()=>null);
-    if(!existingPresets || !existingPresets.value){
+    let presetsDoc = null, presetsReadOk = true;
+    try{ presetsDoc = await window.storage.get('presets', false); }catch(e){ presetsReadOk = false; }
+    if(presetsReadOk && (!presetsDoc || !presetsDoc.value)){
       await window.storage.set('presets', JSON.stringify(MIGRATED_PRESETS), false);
     }
   }catch(e){
